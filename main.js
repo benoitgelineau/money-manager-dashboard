@@ -13,11 +13,17 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('public/index.html')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 }
+
+// Enable hot reload
+require('electron-reload')(__dirname, {
+  electron: path.join(__dirname, './node_modules', '.bin', 'electron'),
+  awaitWriteFinish: true,
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
