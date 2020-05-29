@@ -69,7 +69,7 @@
   }
 </style>
 
-<h1>Money Manager test</h1>
+<h1>Money Manager</h1>
 
 <div id="main">
   <nav>

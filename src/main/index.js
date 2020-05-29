@@ -1,13 +1,16 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
 const channels = require('../common/channels');
+const { getAllRows } = require('./csvHelper');
 
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 700,
     webPreferences: {
       contextIsolation: true, // protect against prototype pollution
       enableRemoteModule: false, // turn off remote
@@ -37,9 +40,15 @@ require('electron-reload')(__dirname, {
 
 // Event listeners
 ipcMain.handle(channels.FETCH_TRANSACTIONS, async (event, arg) => {
-  console.log('ipcMain handle getTransactions');
-  const result = await Promise.resolve(arg);
-  return result;
+  try {
+    const filePath = '/home/benblock/Documents/Budget/transactions_2020-05.csv';
+    if (fs.existsSync(filePath)) {
+      const data = await getAllRows(filePath);
+      return data;
+    }
+  } catch (error) {
+    console.log('[MAIN] cannot get rows from .csv', error);
+  }
 });
 
 // This method will be called when Electron has finished

@@ -19,6 +19,7 @@
   "author": "B. Gelineau <bgelineau.dev@gmail.com>",
   "dependencies": {
     "concurrently": "^5.2.0",
+    "csv-parser": "^2.3.2",
     "sirv-cli": "^0.4.4"
   },
   "devDependencies": {
