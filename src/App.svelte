@@ -57,6 +57,8 @@
 	</div>
 </div>
 
+<div id="app-version"/>
+
 <style>
 	h1 {
 		text-align: center;
@@ -82,5 +84,11 @@
 	}
 	nav button {
 		cursor: pointer;
+	}
+
+	#app-version {
+		position: absolute;
+		top: 5px;
+		right: 5px;
 	}
 </style>

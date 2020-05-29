@@ -9,4 +9,6 @@ window.addEventListener('DOMContentLoaded', () => {
   for (const type of ['chrome', 'node', 'electron']) {
     replaceText(`${type}-version`, process.versions[type])
   }
+
+  replaceText(`app-version`, process.env.npm_package_version)
 })
