@@ -2,9 +2,10 @@
   "name": "budget-dashboard",
   "version": "0.0.1-alpha",
   "description": "A minimal budget application",
-  "main": "main.js",
+  "main": "src/main/index.js",
   "scripts": {
     "start": "concurrently \"npm:svelte-dev\" \"electron .\"",
+    "electron-start": "electron .",
     "svelte-build": "rollup -c",
     "svelte-dev": "rollup -c -w",
     "svelte-start": "sirv public"
@@ -27,7 +28,6 @@
     "electron-reload": "^1.5.0",
     "rollup": "^1.20.0",
     "rollup-plugin-livereload": "^1.0.0",
-    "rollup-plugin-scss": "^2.5.0",
     "rollup-plugin-svelte": "^5.0.3",
     "rollup-plugin-terser": "^5.1.2",
     "svelte": "^3.0.0"

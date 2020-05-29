@@ -1,26 +1,7 @@
 <script>
-  import { fields } from './config.js';
-  import { transactions } from './stores.js';
+  import { fields } from "./config.js";
+  import { transactions } from "./stores.js";
 </script>
-
-<table class="transaction-list">
-  <thead>
-    <tr>
-      {#each fields as { label }}
-        <th>{label}</th>
-      {/each}
-    </tr>
-  </thead>
-  <tbody>
-    {#each $transactions as transaction}
-      <tr>
-        {#each Object.values(transaction) as value}
-          <td>{value}</td>
-        {/each}
-      </tr>
-    {/each}
-  </tbody>
-</table>
 
 <style>
   table {
@@ -74,3 +55,22 @@
     background: #f8f6ff;
   }
 </style>
+
+<table class="transaction-list">
+  <thead>
+    <tr>
+      {#each fields as { label }}
+        <th>{label}</th>
+      {/each}
+    </tr>
+  </thead>
+  <tbody>
+    {#each $transactions as transaction}
+      <tr>
+        {#each Object.values(transaction) as value}
+          <td>{value}</td>
+        {/each}
+      </tr>
+    {/each}
+  </tbody>
+</table>
