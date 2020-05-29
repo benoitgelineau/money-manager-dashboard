@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { transactions } from "./stores.js";
+  import { transactions, fetchTransactions } from "./stores.js";
   import HomePage from "./pages/Home.svelte";
   import DetailsPage from "./pages/Details.svelte";
   import TransactionForm from "./TransactionForm.svelte";
@@ -26,7 +26,8 @@
     currentPage = id;
   }
 
-  onMount(async () => {
+  onMount(() => {
+    fetchTransactions();
     // const res = await fetch('http://localhost:5000/api/transactions');
     // const data = await res.json();
     // console.log('App onMount', data);

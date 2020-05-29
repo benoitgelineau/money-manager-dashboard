@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const channels = require('../common/channels');
 
 function createWindow() {
   // Create the browser window.
@@ -35,7 +36,7 @@ require('electron-reload')(__dirname, {
 });
 
 // Event listeners
-ipcMain.handle('toMain', async (event, arg) => {
+ipcMain.handle(channels.FETCH_TRANSACTIONS, async (event, arg) => {
   console.log('ipcMain handle getTransactions');
   const result = await Promise.resolve(arg);
   return result;
