@@ -4,6 +4,20 @@ import { fields, transactionTypes, categories } from './config.js';
 
 const { ipcRenderer } = window.electron;
 
+// Store transactions
+function createTransactions() {
+  return writable([]);
+}
+
+export const transactions = createTransactions();
+
+// Store accounts
+function createAccounts() {
+  return writable([]);
+}
+
+export const accounts = createAccounts();
+
 // Fetch transactions
 export const fetchTransactions = async () => {
 import { fields, transactionTypes, categories } from './config.js';
@@ -11,6 +25,7 @@ import { fields, transactionTypes, categories } from './config.js';
     channels.FETCH_TRANSACTIONS,
     'should add date range',
   );
+  transactions.set(result);
   return result;
 };
 

@@ -30,6 +30,12 @@
   }
 </script>
 
+<style>
+  form {
+    overflow: hidden;
+  }
+</style>
+
 <form on:submit|preventDefault={submitTransaction}>
   <select
     name={fields[1].id}

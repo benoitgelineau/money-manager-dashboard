@@ -41,9 +41,11 @@
   }
 
   #main {
+    flex: 1 1 100%;
     position: relative;
     width: 100%;
     max-width: 80vw;
+    min-height: 0;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -60,6 +62,12 @@
   }
   nav button {
     cursor: pointer;
+  }
+
+  #page-content {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
   }
 
   #app-version {
@@ -88,7 +96,7 @@
     {:else if currentPage === 'details'}
       <DetailsPage />
     {:else if currentPage === 'addTransaction'}
-      <TransactionForm />
+      <!-- <TransactionForm /> -->
       <TransactionList />
     {/if}
   </div>

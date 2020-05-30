@@ -67,8 +67,11 @@
   <tbody>
     {#each $transactions as transaction}
       <tr>
-        {#each Object.values(transaction) as value}
+        <!-- {#each Object.values(transaction) as value}
           <td>{value}</td>
+        {/each} -->
+        {#each fields as { id }}
+          <td>{transaction[id]}</td>
         {/each}
       </tr>
     {/each}
