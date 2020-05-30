@@ -17,9 +17,10 @@
       minmax(150px, 2.33fr)
       minmax(150px, 1.67fr); */
     grid-template-columns:
-      repeat(2, minmax(150px, 1fr))
+      repeat(2, minmax(100px, 1fr))
       repeat(4, minmax(150px, 2.33fr))
-      minmax(150px, 1.67fr);
+      minmax(100px, 1.67fr);
+    overflow: auto;
   }
 
   thead,
@@ -30,24 +31,26 @@
 
   th,
   td {
-    padding: 15px;
+    padding: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   th {
-    position: sticky;
-    top: 0;
+    /* Works only if scroll is in table */
+    /* position: sticky;
+    top: 0; */
     background: #6c7ae0;
     text-align: left;
     font-weight: normal;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: white;
   }
 
   td {
-    padding: 10px inherit;
+    font-size: 0.8rem;
+    padding: 6px inherit;
     color: #808080;
   }
 
@@ -67,9 +70,6 @@
   <tbody>
     {#each $transactions as transaction}
       <tr>
-        <!-- {#each Object.values(transaction) as value}
-          <td>{value}</td>
-        {/each} -->
         {#each fields as { id }}
           <td>{transaction[id]}</td>
         {/each}
