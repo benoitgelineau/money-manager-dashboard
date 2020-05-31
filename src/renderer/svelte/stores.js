@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 import channels from 'common/channels';
-import { fields, transactionTypes, categories } from './config.js';
+import { fields, transactionTypes, categories } from './config';
+import { parseTransactions } from './helper';
 
 const { ipcRenderer } = window.electron;
 
@@ -20,11 +21,12 @@ export const accounts = createAccounts();
 
 // Fetch transactions
 export const fetchTransactions = async () => {
-import { fields, transactionTypes, categories } from './config.js';
+  const data = await ipcRenderer.invoke(
   const result = await ipcRenderer.invoke(
     channels.FETCH_TRANSACTIONS,
     'should add date range',
   );
+  const result = parseTransactions(data);
   transactions.set(result);
   return result;
 };

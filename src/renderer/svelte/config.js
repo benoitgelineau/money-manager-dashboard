@@ -31,7 +31,11 @@ export const fields = [
   },
 ];
 
-export const transactionTypes = ['Dépense', 'Revenu', 'Virement'];
+export const transactionTypes = [
+  { id: 'expense', label: 'Dépense' },
+  { id: 'income', label: 'Revenu' },
+  { id: 'transfer', label: 'Virement' },
+];
 
 export const categories = [
   'Alimentaire',
