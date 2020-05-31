@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { fetchTransactions } from "./stores.js";
+  import { fetchData } from "./stores.js";
   import HomeView from "./views/Home.svelte";
   import EvolutionsView from "./views/Evolutions.svelte";
   import TransactionForm from "./TransactionForm.svelte";
@@ -20,6 +20,7 @@
     }
   ];
   let currentView = "home";
+  let isLoading = false;
 
   function showView(id) {
     currentView = id;
@@ -29,8 +30,10 @@
     console.log("TODO open form modal");
   }
 
-  onMount(() => {
-    fetchTransactions();
+  onMount(async () => {
+    isLoading = true;
+    await fetchData();
+    isLoading = false;
   });
 </script>
 

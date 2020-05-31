@@ -1,5 +1,3 @@
-export const accounts = ['CCP - Crédit Coopératif', 'LDDS - Crédit Coopératif'];
-
 export const fields = [
   {
     id: 'date',
@@ -37,8 +35,13 @@ export const transactionTypes = [
   { id: 'transfer', label: 'Virement' },
 ];
 
-export const categories = [
-  'Alimentaire',
-  'Internet',
-  'Loyer - Résidence principale',
+export const defaultCategories = [
+  {
+    id: 'expense',
+    values: [],
+  },
+  {
+    id: 'income',
+    values: [],
+  },
 ];

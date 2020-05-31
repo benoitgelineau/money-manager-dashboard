@@ -12,3 +12,10 @@ export const parseTransactions = (transactions) => {
     };
   });
 };
+
+export const removeDuplicates = (list) => {
+  return list.reduce(
+    (unique, item) => (unique.includes(item) ? unique : [...unique, item]),
+    [],
+  );
+};

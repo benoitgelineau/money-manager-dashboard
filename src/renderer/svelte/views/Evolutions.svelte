@@ -1,5 +1,5 @@
 <script>
-  import { accounts } from "../config.js";
+  import { accounts } from "../stores.js";
 
   let selectedAccount = "";
 
