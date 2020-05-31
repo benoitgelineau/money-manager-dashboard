@@ -3,7 +3,7 @@
   import { fetchData } from "./stores.js";
   import HomeView from "./views/Home.svelte";
   import EvolutionsView from "./views/Evolutions.svelte";
-  import TransactionForm from "./TransactionForm.svelte";
+  import TransactionForm from "./components/TransactionForm.svelte";
 
   const pages = [
     {

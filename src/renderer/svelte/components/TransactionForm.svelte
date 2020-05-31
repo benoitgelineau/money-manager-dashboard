@@ -1,11 +1,11 @@
 <script>
-  import { fields, transactionTypes } from "./config.js";
+  import { fields, transactionTypes } from "../config.js";
   import {
     newTransaction,
     transactions,
     categories,
     accounts
-  } from "./stores.js";
+  } from "../stores.js";
 
   function submitTransaction() {
     // Should send request to update .csv & clean fields

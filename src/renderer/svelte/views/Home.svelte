@@ -1,5 +1,8 @@
 <script>
-  import TransactionList from "../TransactionList.svelte";
+  import TransactionList from "../components/TransactionList.svelte";
+  import DashboardContainer from "../components/DashboardContainer.svelte";
+  import { transactions, categories } from "../stores";
+  import { formatCurrencyAmount } from "../helper";
 
   const periods = [
     {
@@ -11,11 +14,68 @@
       label: "Période personnalisée"
     }
   ];
+  // TODO - Be able to tag an account (as Investment to display total amount in here)
+  const types = [
+    {
+      id: "income",
+      label: "Revenus"
+    },
+    {
+      id: "expense",
+      label: "Dépenses"
+    }
+  ];
   let selectedPeriod = "last-month";
+  let typesData = getTypesData();
+  let categoriesData = getExpenseCategoriesData();
 
   function selectPeriod(id) {
     selectedPeriod = id;
   }
+
+  function getTypesData() {
+    return types.map(({ id, label }) => {
+      const totalAmount = getTotalAmountBy("type", id);
+      return {
+        id,
+        label,
+        values: [formatCurrencyAmount(totalAmount, 0)]
+      };
+    });
+  }
+
+  function getExpenseCategoriesData() {
+    const categories = $categories.find(({ id }) => id === "expense");
+    if (!categories) {
+      return [];
+    }
+    return categories.values
+      .map(category => {
+        const absoluteAmount = getTotalAmountBy("category", category);
+        const totalExpenses = getTotalAmountBy("type", "expense");
+        const getRelativeAmount = () => {
+          const value = (parseFloat(absoluteAmount) / totalExpenses) * 100;
+          return `${value.toFixed(2)}%`;
+        };
+        return {
+          label: category,
+          values: [formatCurrencyAmount(absoluteAmount, 2), getRelativeAmount()]
+        };
+      })
+      .sort((a, b) => parseFloat(b.values[0]) - parseFloat(a.values[0]));
+  }
+
+  function getTotalAmountBy(field, filterValue) {
+    return $transactions.reduce((amount, transaction) => {
+      return transaction[field] === filterValue
+        ? amount + parseFloat(transaction.amount)
+        : amount;
+    }, 0);
+  }
+
+  // Force to add $transactions to have data refreshing
+  $: typesData = $transactions && getTypesData();
+  $: categoriesData = $categories && getExpenseCategoriesData();
 </script>
 
 <style>
@@ -49,51 +109,11 @@
     margin: 0;
   }
 
-  .container ul {
-    padding-left: 10px;
-  }
-
-  .container ul li {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .container li .label {
-    max-width: 300px;
-    margin-right: 20px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .container li .absolute-value {
-    font-weight: bold;
-  }
-
-  .container.expenses li {
-    display: grid;
-    grid-template-columns: 1fr auto 8px 50px;
-  }
-
-  .container.expenses li .separator {
-    text-align: center;
-  }
-
   section#details {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     margin-bottom: 30px;
-  }
-
-  section#details .container:not(:last-child) {
-    margin-right: 25px;
-  }
-
-  section#details .container ul {
-    margin: 5px 0;
   }
 
   section#transaction-list .header {
@@ -118,56 +138,10 @@
 </div>
 
 <section id="details">
-  <div class="container types">
-    <h4>Répartition par type</h4>
-    <ul>
-      <li>
-        <div class="label">Revenus</div>
-        <div class="absolute-value">1950.00€</div>
-      </li>
-      <li>
-        <div class="label">Dépenses</div>
-        <div class="absolute-value">1200.00€</div>
-      </li>
-      <li>
-        <div class="label">Epargne</div>
-        <div class="absolute-value">200.00€</div>
-      </li>
-      <li>
-        <div class="label">Investissement</div>
-        <div class="absolute-value">300.00€</div>
-      </li>
-    </ul>
-  </div>
-  <div class="container expenses">
-    <h4>Répartition des dépenses par catégorie</h4>
-    <ul>
-      <li>
-        <div class="label">Logement - Loyer</div>
-        <div class="absolute-value">450€</div>
-        <div class="separator">|</div>
-        <div class="relative-value">27%</div>
-      </li>
-      <li>
-        <div class="label">Alimentation</div>
-        <div class="absolute-value">300€</div>
-        <div class="separator">|</div>
-        <div class="relative-value">22%</div>
-      </li>
-      <li>
-        <div class="label">Garage - Loyer</div>
-        <div class="absolute-value">65€</div>
-        <div class="separator">|</div>
-        <div class="relative-value">13%</div>
-      </li>
-      <li>
-        <div class="label">Internet</div>
-        <div class="absolute-value">30€</div>
-        <div class="separator">|</div>
-        <div class="relative-value">6%</div>
-      </li>
-    </ul>
-  </div>
+  <DashboardContainer title="Répartition par type" list={typesData} />
+  <DashboardContainer
+    title="Répartition des dépenses par catégorie"
+    list={categoriesData} />
 </section>
 
 <section id="transaction-list">

@@ -1,6 +1,6 @@
 <script>
-  import { fields } from "./config.js";
-  import { transactions } from "./stores.js";
+  import { fields } from "../config.js";
+  import { transactions } from "../stores.js";
 </script>
 
 <style>
