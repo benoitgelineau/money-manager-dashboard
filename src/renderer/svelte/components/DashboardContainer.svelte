@@ -6,20 +6,6 @@
 </script>
 
 <style>
-  .container {
-    background: lightgoldenrodyellow;
-    border-radius: 4px;
-    padding: 25px;
-  }
-
-  .container:not(:last-child) {
-    margin-right: 25px;
-  }
-
-  .container h4 {
-    margin: 0;
-  }
-
   .container ul {
     padding-left: 10px;
     margin: 5px 0;

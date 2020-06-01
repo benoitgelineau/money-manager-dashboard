@@ -21,6 +21,14 @@ export const removeDuplicates = (list) => {
   );
 };
 
+export const getTotalAmountBy = (field, filterValue, transactions) => {
+  return transactions.reduce((amount, transaction) => {
+    return transaction[field] === filterValue
+      ? amount + parseFloat(transaction.amount)
+      : amount;
+  }, 0);
+};
+
 export const formatCurrencyAmount = (value, decimals) => {
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',

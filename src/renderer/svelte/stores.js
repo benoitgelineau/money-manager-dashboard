@@ -9,14 +9,12 @@ const { ipcRenderer } = window.electron;
 function createTransactions() {
   return writable([]);
 }
-
 export const transactions = createTransactions();
 
 // Store accounts
 function createAccounts() {
   return writable([]);
 }
-
 export const accounts = createAccounts();
 
 // Store categories
@@ -29,7 +27,6 @@ export const categories = createCategories();
 export const fetchData = async () => {
   // TODO - Use Promise.all to wait for all functions to resolve
   const data = await ipcRenderer.invoke(
-  const result = await ipcRenderer.invoke(
     channels.FETCH_TRANSACTIONS,
     'should add date range',
   );
@@ -98,7 +95,6 @@ function createTransaction() {
   //       );
   //     },
   //   };
-  };
 }
 
 export const newTransaction = createTransaction();

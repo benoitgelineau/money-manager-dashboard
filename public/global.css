@@ -71,3 +71,16 @@ button:not(:disabled):active {
 button:focus {
   border-color: #666;
 }
+
+/* Classes */
+.dashboard-container {
+  display: grid;
+  align-content: center;
+  background: lightgoldenrodyellow;
+  border-radius: 6px;
+  padding: 25px;
+}
+
+.dashboard-container h4 {
+  margin: 0;
+}

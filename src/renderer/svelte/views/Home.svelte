@@ -1,8 +1,8 @@
 <script>
   import TransactionList from "../components/TransactionList.svelte";
-  import DashboardContainer from "../components/DashboardContainer.svelte";
-  import { transactions, categories } from "../stores";
-  import { formatCurrencyAmount } from "../helper";
+  import AmountListTypes from "../components/AmountListTypes.svelte";
+  import AmountListCategories from "../components/AmountListCategories.svelte";
+  import AmountListAccounts from "../components/AmountListAccounts.svelte";
 
   const periods = [
     {
@@ -14,68 +14,11 @@
       label: "Période personnalisée"
     }
   ];
-  // TODO - Be able to tag an account (as Investment to display total amount in here)
-  const types = [
-    {
-      id: "income",
-      label: "Revenus"
-    },
-    {
-      id: "expense",
-      label: "Dépenses"
-    }
-  ];
   let selectedPeriod = "last-month";
-  let typesData = getTypesData();
-  let categoriesData = getExpenseCategoriesData();
 
   function selectPeriod(id) {
     selectedPeriod = id;
   }
-
-  function getTypesData() {
-    return types.map(({ id, label }) => {
-      const totalAmount = getTotalAmountBy("type", id);
-      return {
-        id,
-        label,
-        values: [formatCurrencyAmount(totalAmount, 0)]
-      };
-    });
-  }
-
-  function getExpenseCategoriesData() {
-    const categories = $categories.find(({ id }) => id === "expense");
-    if (!categories) {
-      return [];
-    }
-    return categories.values
-      .map(category => {
-        const absoluteAmount = getTotalAmountBy("category", category);
-        const totalExpenses = getTotalAmountBy("type", "expense");
-        const getRelativeAmount = () => {
-          const value = (parseFloat(absoluteAmount) / totalExpenses) * 100;
-          return `${value.toFixed(2)}%`;
-        };
-        return {
-          label: category,
-          values: [formatCurrencyAmount(absoluteAmount, 2), getRelativeAmount()]
-        };
-      })
-      .sort((a, b) => parseFloat(b.values[0]) - parseFloat(a.values[0]));
-  }
-
-  function getTotalAmountBy(field, filterValue) {
-    return $transactions.reduce((amount, transaction) => {
-      return transaction[field] === filterValue
-        ? amount + parseFloat(transaction.amount)
-        : amount;
-    }, 0);
-  }
-
-  // Force to add $transactions to have data refreshing
-  $: typesData = $transactions && getTypesData();
-  $: categoriesData = $categories && getExpenseCategoriesData();
 </script>
 
 <style>
@@ -99,24 +42,19 @@
     color: black;
   }
 
-  .container {
-    background: lightgoldenrodyellow;
-    border-radius: 4px;
-    padding: 25px;
-  }
-
-  .container h4 {
-    margin: 0;
-  }
-
   section#details {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: repeat(2, auto);
+    grid-gap: 20px;
     margin-bottom: 30px;
   }
 
-  section#transaction-list .header {
+  .dashboard-container {
+    display: block;
+  }
+
+  .dashboard-container .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -138,14 +76,13 @@
 </div>
 
 <section id="details">
-  <DashboardContainer title="Répartition par type" list={typesData} />
-  <DashboardContainer
-    title="Répartition des dépenses par catégorie"
-    list={categoriesData} />
+  <AmountListAccounts />
+  <AmountListTypes />
+  <AmountListCategories />
 </section>
 
 <section id="transaction-list">
-  <div class="container">
+  <div class="dashboard-container">
     <div class="header">
       <h4>Transactions</h4>
       <!-- TODO - Search bar, with field filter (:field) -->
