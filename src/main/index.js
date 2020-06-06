@@ -9,8 +9,10 @@ const { getAllRows } = require('./csvHelper');
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1000,
+    width: 1200,
     height: 700,
+    minWidth: 1200,
+    minHeight: 700,
     webPreferences: {
       contextIsolation: true, // protect against prototype pollution
       enableRemoteModule: false, // turn off remote
@@ -22,7 +24,7 @@ function createWindow() {
   mainWindow.loadFile('public/index.html');
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools();
 }
 
 // Enable hot reload
@@ -41,7 +43,8 @@ require('electron-reload')(__dirname, {
 // Event listeners
 ipcMain.handle(channels.FETCH_TRANSACTIONS, async (event, arg) => {
   try {
-    const filePath = '/home/benblock/Documents/Budget/transactions_2020-05.csv';
+    // const filePath = '/home/benblock/Documents/Budget/transactions_2020-05.csv';
+    const filePath = '/home/benblock/Documents/Budget/transactions_2020.csv';
     if (fs.existsSync(filePath)) {
       const data = await getAllRows(filePath);
       return data;

@@ -6,7 +6,7 @@
   let accountsData = getAccountsData();
 
   function getAccountsData() {
-    return $accounts.map(account => {
+    return $accounts.sort().map(account => {
       const totalAmount = $transactions.reduce((amount, transaction) => {
         const shouldIncreaseAmount =
           transaction.beneficiary === account &&

@@ -10,28 +10,41 @@
     if (!categories) {
       return [];
     }
-    return categories.values
-      .map(category => {
-        const absoluteAmount = getTotalAmountBy(
-          "category",
-          category,
-          $transactions
-        );
-        const totalExpenses = getTotalAmountBy(
-          "type",
-          "expense",
-          $transactions
-        );
-        const getRelativeAmount = () => {
-          const value = (parseFloat(absoluteAmount) / totalExpenses) * 100;
-          return `${value.toFixed(2)}%`;
-        };
-        return {
-          label: category,
-          values: [formatCurrencyAmount(absoluteAmount, 2), getRelativeAmount()]
-        };
-      })
-      .sort((a, b) => parseFloat(b.values[0]) - parseFloat(a.values[0]));
+    return (
+      categories.values
+        // Get amounts
+        .map(category => {
+          const absoluteAmount = getTotalAmountBy(
+            "category",
+            category,
+            $transactions
+          );
+          const totalExpenses = getTotalAmountBy(
+            "type",
+            "expense",
+            $transactions
+          );
+          const getRelativeAmount = () =>
+            (parseFloat(absoluteAmount) / totalExpenses) * 100;
+          return {
+            label: category,
+            values: [absoluteAmount, getRelativeAmount()]
+          };
+        })
+        // Sort from higher to lower value
+        .sort((a, b) => parseFloat(b.values[0]) - parseFloat(a.values[0]))
+        // Format values
+        .map(({ label, values }) => {
+          const [absoluteValue, relativeValue] = values;
+          return {
+            label,
+            values: [
+              formatCurrencyAmount(absoluteValue, 2),
+              `${relativeValue.toFixed(2)}%`
+            ]
+          };
+        })
+    );
   }
 
   $: categoriesData = $categories && getExpenseCategoriesData();
