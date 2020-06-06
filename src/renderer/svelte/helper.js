@@ -9,7 +9,7 @@ export const parseTransactions = (transactions) => {
       type,
       typeLabel: getTypeLabel,
       date: format(new Date(date), 'dd/MM/YYY'),
-      amount: parseFloat(amount).toFixed(2),
+      amount: formatCurrencyAmount(amount, 2),
     };
   });
 };

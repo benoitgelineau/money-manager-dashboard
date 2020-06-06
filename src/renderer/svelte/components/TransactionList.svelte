@@ -17,9 +17,9 @@
       minmax(150px, 2.33fr)
       minmax(150px, 1.67fr); */
     grid-template-columns:
-      repeat(2, minmax(100px, 1fr))
-      repeat(4, minmax(150px, 2.33fr))
-      minmax(100px, 1.67fr);
+      repeat(2, minmax(90px, 1fr))
+      repeat(4, minmax(130px, 2.33fr))
+      minmax(90px, 1.67fr);
     overflow: auto;
   }
 
@@ -50,8 +50,13 @@
 
   td {
     font-size: 0.8rem;
-    padding: 6px inherit;
+    padding-top: 6px;
+    padding-bottom: 6px;
     color: #808080;
+  }
+
+  td[data-id="amount"] {
+    text-align: right;
   }
 
   tr:nth-child(even) td {
@@ -71,7 +76,7 @@
     {#each $transactions as transaction}
       <tr>
         {#each fields as { id }}
-          <td>{transaction[id]}</td>
+          <td data-id={id}>{transaction[id]}</td>
         {/each}
       </tr>
     {/each}
