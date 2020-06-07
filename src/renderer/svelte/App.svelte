@@ -5,6 +5,7 @@
   import HomeView from "./views/Home.svelte";
   import EvolutionsView from "./views/Evolutions.svelte";
   import TransactionForm from "./components/TransactionForm.svelte";
+  import AmountListAccounts from "./components/AmountListAccounts.svelte";
 
   const pages = [
     {
@@ -62,9 +63,14 @@
     padding: 25px 25px 5px;
   }
 
-  nav {
+  #sidebar {
     flex: 0 0 200px;
+    max-width: 200px;
     margin-right: 20px;
+  }
+
+  nav {
+    width: 100%;
   }
 
   nav ul {
@@ -104,29 +110,32 @@
     <div id="app-version" />
     <!-- TODO - Toggle light/dark theme -->
   </div>
-  <div id="balance-amount">
-    <p>
-      Patrimoine :
-      <span>10 000€</span>
-      <!-- TODO - {arrow icon} with evolution from month-1 in % -->
-    </p>
-  </div>
+  <button on:click={openFormModal}>+ Ajouter une transaction</button>
 </header>
 
 <main>
-  <nav>
-    <ul>
-      {#each pages as { id, label }}
-        <li data-active={id === currentView}>
-          <button class="to-view" on:click={() => showView(id)}>{label}</button>
-        </li>
-      {/each}
-      <hr />
-      <li>
-        <button on:click={openFormModal}>+ Ajouter une transaction</button>
-      </li>
-    </ul>
-  </nav>
+  <div id="sidebar">
+    <nav>
+      <ul>
+        {#each pages as { id, label }}
+          <li data-active={id === currentView}>
+            <button class="to-view" on:click={() => showView(id)}>
+              {label}
+            </button>
+          </li>
+        {/each}
+      </ul>
+    </nav>
+    <hr />
+    <div id="balance-amount">
+      <p>
+        Patrimoine :
+        <span>10 000€</span>
+        <!-- TODO - {arrow icon} with evolution from month-1 in % -->
+      </p>
+    </div>
+    <AmountListAccounts />
+  </div>
 
   <div id="page-content">
     {#if currentView === 'home'}

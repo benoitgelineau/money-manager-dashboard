@@ -33,7 +33,7 @@
 
 <style>
   .dashboard-container {
-    grid-area: 2 / 1 / 2 / 1;
+    grid-area: 1 / 1 / 1 / 1;
   }
 </style>
 

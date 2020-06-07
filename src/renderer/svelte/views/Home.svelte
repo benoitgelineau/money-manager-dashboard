@@ -10,7 +10,6 @@
   import TransactionList from "../components/TransactionList.svelte";
   import AmountListTypes from "../components/AmountListTypes.svelte";
   import AmountListCategories from "../components/AmountListCategories.svelte";
-  import AmountListAccounts from "../components/AmountListAccounts.svelte";
 
   const periods = [
     {
@@ -151,7 +150,6 @@
 </div>
 
 <section id="details">
-  <AmountListAccounts />
   <AmountListTypes />
   <AmountListCategories />
 </section>
