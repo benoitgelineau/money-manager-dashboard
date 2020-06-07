@@ -53,7 +53,7 @@
   }
 
   $: {
-    minStartDate = formatDate($getOldestDate);
+    minStartDate = $getOldestDate && formatDate($getOldestDate);
     maxStartDate = $endDate && formatDate($endDate);
     minEndDate = $startDate && formatDate($startDate);
   }
