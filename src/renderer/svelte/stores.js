@@ -1,40 +1,70 @@
-import { writable } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
+import { startOfMonth } from 'date-fns';
 import channels from 'common/channels';
 import { fields, transactionTypes, defaultCategories } from './config';
-import { parseTransactions, removeDuplicates } from './helper';
+import {
+  parseTransactions,
+  formatTransactions,
+  filterTransactions,
+  removeDuplicates,
+} from './helper';
 
 const { ipcRenderer } = window.electron;
 
 // Store transactions
-function createTransactions() {
-  return writable([]);
-}
-export const transactions = createTransactions();
+export const transactions = writable([]);
+
+// Store start date as Date object
+export const startDate = writable(null);
+
+// Store end date as Date object
+export const endDate = writable(null);
+
+// Filter transactions list with period range
+export const filteredTransactions = derived(
+  [transactions, startDate, endDate],
+  ([$transactions, $startDate, $endDate]) =>
+    filterTransactions($transactions, {
+      from: $startDate,
+      to: $endDate,
+    }),
+);
+
+// Format date and amount values
+export const formattedTransactions = derived(
+  filteredTransactions,
+  ($filteredTransactions) => formatTransactions($filteredTransactions),
+);
+
+export const getOldestDate = derived(transactions, ($transactions) =>
+  $transactions.length > 0 ? new Date([...$transactions].pop().date) : null,
+);
+
+export const getLatestDate = derived(transactions, ($transactions) =>
+  $transactions.length > 0 ? new Date($transactions[0].date) : null,
+);
 
 // Store accounts
-function createAccounts() {
-  return writable([]);
-}
-export const accounts = createAccounts();
+export const accounts = writable([]);
 
 // Store categories
-function createCategories() {
-  return writable([]);
-}
-export const categories = createCategories();
+export const categories = writable([]);
 
 // Fetch transactions
-export const fetchData = async () => {
+export const fetchData = async (periodRange) => {
   // TODO - Use Promise.all to wait for all functions to resolve
   const data = await ipcRenderer.invoke(
     channels.FETCH_TRANSACTIONS,
-    'should add date range',
+    periodRange,
   );
   const result = parseTransactions(data);
   transactions.set(result);
   // TODO - Set elsewhere, not in App mounted as we don't need it yet
   setAccounts(data);
   setCategories(data);
+  const latestDate = new Date(result[0].date);
+  startDate.set(startOfMonth(latestDate));
+  endDate.set(latestDate);
   return result;
 };
 

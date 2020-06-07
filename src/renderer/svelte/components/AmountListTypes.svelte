@@ -1,6 +1,6 @@
 <script>
   import DashboardContainer from "./DashboardContainer.svelte";
-  import { transactions } from "../stores";
+  import { filteredTransactions } from "../stores";
   import { getTotalAmountBy, formatCurrencyAmount } from "../helper";
 
   // TODO - Be able to tag an account (as Investment to display total amount in here)
@@ -18,7 +18,7 @@
 
   function getTypesData() {
     return types.map(({ id, label }) => {
-      const totalAmount = getTotalAmountBy("type", id, $transactions);
+      const totalAmount = getTotalAmountBy("type", id, $filteredTransactions);
       return {
         id,
         label,
@@ -27,8 +27,8 @@
     });
   }
 
-  // Force to add $transactions to have data refreshing
-  $: typesData = $transactions && getTypesData();
+  // Force to add $filteredTransactions to have data refreshing
+  $: typesData = $filteredTransactions && getTypesData();
 </script>
 
 <style>

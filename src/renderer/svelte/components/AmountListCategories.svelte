@@ -1,6 +1,6 @@
 <script>
   import DashboardContainer from "./DashboardContainer.svelte";
-  import { transactions, categories } from "../stores";
+  import { filteredTransactions, categories } from "../stores";
   import { getTotalAmountBy, formatCurrencyAmount } from "../helper";
 
   let categoriesData = getExpenseCategoriesData();
@@ -17,12 +17,12 @@
           const absoluteAmount = getTotalAmountBy(
             "category",
             category,
-            $transactions
+            $filteredTransactions
           );
           const totalExpenses = getTotalAmountBy(
             "type",
             "expense",
-            $transactions
+            $filteredTransactions
           );
           const getRelativeAmount = () =>
             (parseFloat(absoluteAmount) / totalExpenses) * 100;
@@ -47,7 +47,8 @@
     );
   }
 
-  $: categoriesData = $categories && getExpenseCategoriesData();
+  $: categoriesData =
+    $filteredTransactions && $categories && getExpenseCategoriesData();
 </script>
 
 <style>

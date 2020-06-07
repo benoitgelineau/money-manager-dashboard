@@ -1,6 +1,6 @@
 <script>
   import { fields } from "../config.js";
-  import { transactions } from "../stores.js";
+  import { formattedTransactions } from "../stores.js";
 </script>
 
 <style>
@@ -73,7 +73,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each $transactions as transaction}
+    {#each $formattedTransactions as transaction}
       <tr>
         {#each fields as { id }}
           <td data-id={id}>{transaction[id]}</td>

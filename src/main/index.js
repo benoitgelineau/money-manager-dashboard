@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const channels = require('../common/channels');
-const { getAllRows } = require('./csvHelper');
+const { getRows, CSV_FILEPATH } = require('./csvHelper');
 
 function createWindow() {
   // Create the browser window.
@@ -41,10 +41,10 @@ require('electron-reload')(__dirname, {
 });
 
 // Event listeners
-ipcMain.handle(channels.FETCH_TRANSACTIONS, async (event, arg) => {
+ipcMain.handle(channels.FETCH_TRANSACTIONS, async (event, periodRange) => {
   try {
-    // const filePath = '/home/benblock/Documents/Budget/transactions_2020-05.csv';
-    const filePath = '/home/benblock/Documents/Budget/transactions_2020.csv';
+    if (fs.existsSync(CSV_FILEPATH)) {
+      const data = await getRows(periodRange);
     if (fs.existsSync(filePath)) {
       const data = await getAllRows(filePath);
       return data;
