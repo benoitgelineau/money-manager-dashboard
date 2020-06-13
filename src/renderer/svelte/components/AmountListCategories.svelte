@@ -31,6 +31,8 @@
             values: [absoluteAmount, getRelativeAmount()]
           };
         })
+        // Remove null or negative values
+        .filter(({ values }) => parseFloat(values[0]) > 0)
         // Sort from higher to lower value
         .sort((a, b) => parseFloat(b.values[0]) - parseFloat(a.values[0]))
         // Format values

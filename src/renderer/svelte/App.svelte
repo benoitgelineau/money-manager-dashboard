@@ -106,7 +106,7 @@
 
 <header>
   <div id="app-info">
-    <h1>My Little Budget</h1>
+    <h1>My Little Budget App</h1>
     <div id="app-version" />
     <!-- TODO - Toggle light/dark theme -->
   </div>
@@ -134,7 +134,13 @@
         <!-- TODO - {arrow icon} with evolution from month-1 in % -->
       </p>
     </div>
-    <AmountListAccounts />
+    <div>
+      <p>
+        <u>Comptes</u>
+      </p>
+      <!-- <button id="account-settings">Gérer mes comptes</button> -->
+      <AmountListAccounts />
+    </div>
   </div>
 
   <div id="page-content">

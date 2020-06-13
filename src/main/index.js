@@ -45,8 +45,6 @@ ipcMain.handle(channels.FETCH_TRANSACTIONS, async (event, periodRange) => {
   try {
     if (fs.existsSync(CSV_FILEPATH)) {
       const data = await getRows(periodRange);
-    if (fs.existsSync(filePath)) {
-      const data = await getAllRows(filePath);
       return data;
     }
   } catch (error) {

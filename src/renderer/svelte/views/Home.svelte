@@ -1,60 +1,70 @@
 <script>
-  import { format, startOfMonth } from "date-fns";
+  import {
+    format,
+    startOfMonth,
+    endOfMonth,
+    eachMonthOfInterval,
+    startOfYear,
+    endOfYear
+  } from "date-fns";
+  import frLocale from "date-fns/locale/fr";
+  import { removeDuplicates } from "../helper";
   import {
     startDate,
     endDate,
     transactions,
     getOldestDate,
     getLatestDate
-  } from "../stores.js";
+  } from "../stores";
   import TransactionList from "../components/TransactionList.svelte";
   import AmountListTypes from "../components/AmountListTypes.svelte";
   import AmountListCategories from "../components/AmountListCategories.svelte";
 
-  const periods = [
-    {
-      id: "last-month",
-      label: "Dernier mois"
-    },
-    {
-      id: "custom",
-      label: "Période personnalisée"
-    }
-  ];
-  let selectedPeriod = "last-month";
-  let minStartDate;
-  let maxStartDate;
-  let minEndDate;
-  let maxEndDate = formatDate(Date.now());
+  let allAvailableMonths = [];
+  let availableYears = [];
+  let selectedPeriod = "month";
 
-  function selectPeriod(id) {
-    selectedPeriod = id;
-    if (id === "last-month") {
-      $startDate = startOfMonth($getLatestDate);
-      $endDate = $getLatestDate;
+  function handlePeriodRangeChange(event) {
+    const { value } = event.target;
+    selectedPeriod = value;
+    if (value === "year") {
+      udpatePeriod(new Date(availableYears[0], 0));
+    } else if (value === "month") {
+      udpatePeriod(new Date(allAvailableMonths[0].value));
     }
   }
 
-  function handleDateChange(event) {
-    const { name, value } = event.target;
-    switch (name) {
-      case "start-date":
-        $startDate = new Date(value);
-        break;
-      case "end-date":
-        $endDate = new Date(value);
-        break;
-    }
+  function handlePeriodChange(event) {
+    const { value } = event.target;
+    udpatePeriod(value);
   }
 
-  function formatDate(date) {
-    return format(date, "yyyy-MM-dd");
+  function udpatePeriod(date) {
+    if (selectedPeriod === "month") {
+      $startDate = startOfMonth(new Date(date));
+      $endDate = endOfMonth(new Date(date));
+    } else if (selectedPeriod === "year") {
+      $startDate = startOfYear(new Date(date));
+      $endDate = endOfYear(new Date(date));
+    }
   }
 
   $: {
-    minStartDate = $getOldestDate && formatDate($getOldestDate);
-    maxStartDate = $endDate && formatDate($endDate);
-    minEndDate = $startDate && formatDate($startDate);
+    allAvailableMonths =
+      $getOldestDate && $getLatestDate
+        ? eachMonthOfInterval({
+            start: $getOldestDate,
+            end: $getLatestDate
+          })
+            .map(date => ({
+              label: format(date, "MMMM yyyy", { locale: frLocale }),
+              value: new Date(date)
+            }))
+            .sort((a, b) => b.value - a.value)
+        : [];
+    availableYears = removeDuplicates(
+      allAvailableMonths.map(({ value }) => value.getFullYear())
+    );
   }
 </script>
 
@@ -71,23 +81,16 @@
     align-items: center;
   }
 
-  #header form {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+  .periods label {
+    display: inline-block;
   }
 
-  .periods button {
-    color: grey;
-    cursor: pointer;
-  }
-
-  .periods button:not(:last-child) {
+  .periods label:not(:last-child) {
     margin-right: 5px;
   }
 
-  .periods button[data-active="true"] {
-    color: black;
+  .periods select {
+    cursor: pointer;
   }
 
   section#details {
@@ -112,41 +115,35 @@
 
 <div id="header">
   <div id="title">
-    <h2>Vue globale</h2>
+    <h2>Vue d'ensemble</h2>
     <div class="periods">
-      {#each periods as { id, label }}
-        <button
-          data-active={id === selectedPeriod}
-          on:click={() => selectPeriod(id)}>
-          {label}
-        </button>
-      {/each}
+      <label for="select-period-range">
+        <select
+          name="period-range-select"
+          id="select-period-range"
+          on:change={handlePeriodRangeChange}>
+          <option value="month">Mois</option>
+          <option value="year">Année</option>
+        </select>
+      </label>
+      <label for="select-period">
+        <select
+          name="period-select"
+          id="select-period"
+          on:change={handlePeriodChange}>
+          {#if selectedPeriod === 'month'}
+            {#each allAvailableMonths as { label, value }}
+              <option {value}>{label}</option>
+            {/each}
+          {:else if selectedPeriod === 'year'}
+            {#each availableYears as value}
+              <option {value}>{value}</option>
+            {/each}
+          {/if}
+        </select>
+      </label>
     </div>
   </div>
-  {#if selectedPeriod === 'custom'}
-    <form>
-      <label for="start-date">
-        Début :
-        <input
-          type="date"
-          name="start-date"
-          value={formatDate($startDate)}
-          min={minStartDate}
-          max={maxStartDate}
-          on:change={handleDateChange} />
-      </label>
-      <label for="end-date">
-        Fin :
-        <input
-          type="date"
-          name="end-date"
-          value={formatDate($endDate)}
-          min={minEndDate}
-          max={maxEndDate}
-          on:change={handleDateChange} />
-      </label>
-    </form>
-  {/if}
 </div>
 
 <section id="details">

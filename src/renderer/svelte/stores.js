@@ -37,7 +37,10 @@ export const formattedTransactions = derived(
 );
 
 export const getOldestDate = derived(transactions, ($transactions) =>
-  $transactions.length > 0 ? new Date([...$transactions].pop().date) : null,
+  // $transactions.length > 0 ? new Date([...$transactions].pop().date) : null,
+  $transactions.length > 0
+    ? new Date($transactions[$transactions.length - 1].date)
+    : null,
 );
 
 export const getLatestDate = derived(transactions, ($transactions) =>
@@ -62,9 +65,11 @@ export const fetchData = async (periodRange) => {
   // TODO - Set elsewhere, not in App mounted as we don't need it yet
   setAccounts(data);
   setCategories(data);
-  const latestDate = new Date(result[0].date);
-  startDate.set(startOfMonth(latestDate));
-  endDate.set(latestDate);
+  const latest = new Date(result[0].date);
+  startDate.set(startOfMonth(latest));
+  // const oldest = new Date(result[result.length - 1].date);
+  // startDate.set(startOfMonth(oldest));
+  endDate.set(latest);
   return result;
 };
 

@@ -27,14 +27,4 @@ exports.getRows = async ({ from = null, to = Date.now() } = {}) => {
       ? isEqual(currentDate, from) || isAfter(currentDate, from)
       : true;
   });
-        quote: "'",
-      }),
-    );
-    return new Promise((resolve, reject) => {
-      const results = [];
-      stream.on('data', (data) => results.push(data));
-      stream.on('end', () => resolve(results));
-      stream.on('error', (error) => reject(error));
-    });
-  },
 };
