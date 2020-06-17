@@ -2,6 +2,20 @@
   import { transactions, accounts } from "../stores";
   import { formatCurrencyAmount } from "../helper";
 
+  const getInitialAmount = account => {
+    const initialAmount = {
+      "La Banque Postale - CCP": 876.55,
+      "La Banque Postale - Livret A": 8.67,
+      "La Banque Postale - LDDS": 4209.98,
+      "Crédit Coopératif - CCP": 300,
+      "Crédit Coopératif - LDDS": 10,
+      "Assurance-vie - LINXEA Avenir": 3000,
+      "BforBank - PEA": 1305.19
+    };
+    return Object.keys(initialAmount).includes(account)
+      ? initialAmount[account]
+      : 0;
+  };
   let accountsData = getAccountsData();
 
   function getAccountsData() {
@@ -22,7 +36,9 @@
       }, 0);
       return {
         label: account,
-        values: [formatCurrencyAmount(totalAmount, 2)]
+        values: [
+          formatCurrencyAmount(totalAmount + getInitialAmount(account), 2)
+        ]
       };
     });
   }
