@@ -3,13 +3,30 @@ import { startOfMonth } from 'date-fns';
 import channels from 'common/channels';
 import { fields, transactionTypes, defaultCategories } from './config';
 import {
-  parseTransactions,
-  formatTransactions,
   filterTransactions,
+  formatCurrencyAmount,
+  formatTransactions,
+  parseTransactions,
   removeDuplicates,
 } from './helper';
 
 const { ipcRenderer } = window.electron;
+
+// Temp initial amounts
+const getInitialAmount = (account) => {
+  const initialAmount = {
+    'La Banque Postale - CCP': 876.55,
+    'La Banque Postale - Livret A': 8.67,
+    'La Banque Postale - LDDS': 4209.98,
+    'Crédit Coopératif - CCP': 300,
+    'Crédit Coopératif - LDDS': 10,
+    'Assurance-vie - LINXEA Avenir': 3000,
+    'BforBank - PEA': 1305.19,
+  };
+  return Object.keys(initialAmount).includes(account)
+    ? initialAmount[account]
+    : 0;
+};
 
 // Store transactions
 export const transactions = writable([]);
@@ -72,6 +89,40 @@ export const fetchData = async (periodRange) => {
   endDate.set(latest);
   return result;
 };
+
+// Get accounts total amount with label
+export const accountsData = derived(
+  [accounts, transactions],
+  ([$accounts, $transactions]) => {
+    return $accounts.sort().map((account) => {
+      const totalAmount = $transactions.reduce((amount, transaction) => {
+        const shouldIncreaseAmount =
+          transaction.beneficiary === account &&
+          (transaction.type === 'income' || transaction.type === 'transfer');
+        const shouldDecreaseAmount =
+          transaction.source === account &&
+          (transaction.type === 'expense' || transaction.type === 'transfer');
+        if (shouldIncreaseAmount) {
+          return amount + parseFloat(transaction.amount);
+        } else if (shouldDecreaseAmount) {
+          return amount - parseFloat(transaction.amount);
+        }
+        return amount;
+      }, 0);
+      return {
+        label: account,
+        amount: totalAmount + getInitialAmount(account),
+      };
+    });
+  },
+);
+
+// Get total accounts amount
+export const wealthAmount = derived(accountsData, ($accountsData) => {
+  return $accountsData.reduce((totalAmount, account) => {
+    return totalAmount + parseFloat(account.amount);
+  }, 0);
+});
 
 function setAccounts(transactions) {
   const result = transactions.flatMap(({ type, source, beneficiary }) => {

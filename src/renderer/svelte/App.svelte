@@ -1,7 +1,8 @@
 <script>
   import { onMount } from "svelte";
   import { isAfter } from "date-fns";
-  import { fetchData } from "./stores.js";
+  import { fetchData, wealthAmount } from "./stores";
+  import { formatCurrencyAmount } from "./helper";
   import HomeView from "./views/Home.svelte";
   import EvolutionsView from "./views/Evolutions.svelte";
   import TransactionForm from "./components/TransactionForm.svelte";
@@ -130,7 +131,7 @@
     <div id="balance-amount">
       <p>
         Patrimoine :
-        <span>10 000€</span>
+        <span>{formatCurrencyAmount($wealthAmount, 2)}</span>
         <!-- TODO - {arrow icon} with evolution from month-1 in % -->
       </p>
     </div>
