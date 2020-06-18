@@ -12,6 +12,14 @@ import {
 
 const { ipcRenderer } = window.electron;
 
+export const openModal = () => {
+  ipcRenderer.send(channels.OPEN_MODAL);
+};
+
+export const closeModal = () => {
+  ipcRenderer.send(channels.CLOSE_MODAL);
+};
+
 // Temp initial amounts
 const getInitialAmount = (account) => {
   const initialAmount = {

@@ -6,6 +6,8 @@ const os = require('os');
 const channels = require('../common/channels');
 const { getRows, CSV_FILEPATH } = require('./csvHelper');
 
+let modalWindow;
+
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -21,7 +23,7 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile('public/index.html');
+  mainWindow.loadFile('public/app/index.html');
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
@@ -49,6 +51,34 @@ ipcMain.handle(channels.FETCH_TRANSACTIONS, async (event, periodRange) => {
     }
   } catch (error) {
     console.log('[MAIN] cannot get rows from .csv', error);
+  }
+});
+
+ipcMain.on(channels.OPEN_MODAL, () => {
+  if (!!modalWindow) {
+    modalWindow.focus();
+    return;
+  }
+  modalWindow = new BrowserWindow({
+    width: 600,
+    height: 350,
+    frame: false,
+    webPreferences: {
+      contextIsolation: true, // protect against prototype pollution
+      enableRemoteModule: false, // turn off remote
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
+  modalWindow.on('close', function () {
+    modalWindow = null;
+  });
+  modalWindow.loadFile('public/modals/index.html');
+  modalWindow.show();
+});
+
+ipcMain.on(channels.CLOSE_MODAL, () => {
+  if (!!modalWindow) {
+    modalWindow.close();
   }
 });
 

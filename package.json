@@ -4,7 +4,7 @@
   "description": "A minimal budget application",
   "main": "src/main/index.js",
   "scripts": {
-    "start": "LANG=fr_FR concurrently --kill-others \"npm:svelte-dev\" \"electron .\"",
+    "start": "concurrently --kill-others \"npm:svelte-dev\" \"electron .\"",
     "electron-start": "electron .",
     "svelte-build": "rollup -c",
     "svelte-dev": "rollup -c -w",

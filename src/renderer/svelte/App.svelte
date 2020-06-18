@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { isAfter } from "date-fns";
-  import { fetchData, wealthAmount } from "./stores";
+  import { fetchData, wealthAmount, openModal } from "./stores";
   import { formatCurrencyAmount } from "./helper";
   import HomeView from "./views/Home.svelte";
   import EvolutionsView from "./views/Evolutions.svelte";
@@ -30,7 +30,7 @@
   }
 
   function openFormModal() {
-    console.log("TODO open form modal");
+    openModal();
   }
 
   onMount(async () => {
