@@ -4,13 +4,14 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const channels = require('../common/channels');
-const { getRows, CSV_FILEPATH } = require('./csvHelper');
+const { getRows, CSV_FILEPATH, addRow } = require('./csvHelper');
 
+let mainWindow;
 let modalWindow;
 
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 700,
     minWidth: 1200,
@@ -20,6 +21,13 @@ function createWindow() {
       enableRemoteModule: false, // turn off remote
       preload: path.join(__dirname, 'preload.js'),
     },
+  });
+
+  mainWindow.on('close', () => {
+    if (!!modalWindow) {
+      modalWindow = null;
+    }
+    mainWindow = null;
   });
 
   // and load the index.html of the app.
@@ -69,7 +77,7 @@ ipcMain.on(channels.OPEN_MODAL, () => {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-  modalWindow.on('close', function () {
+  modalWindow.on('close', () => {
     modalWindow = null;
   });
   modalWindow.loadFile('public/modals/index.html');
@@ -80,6 +88,13 @@ ipcMain.on(channels.CLOSE_MODAL, () => {
   if (!!modalWindow) {
     modalWindow.close();
   }
+});
+
+ipcMain.on(channels.ADD_TRANSACTION, async (event, data) => {
+  await addRow(data);
+  const transactions = await getRows();
+  // Update store in main window
+  mainWindow.webContents.send(channels.SET_TRANSACTIONS, transactions);
 });
 
 // This method will be called when Electron has finished

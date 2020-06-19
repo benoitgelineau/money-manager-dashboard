@@ -1,5 +1,5 @@
 import { writable, derived } from 'svelte/store';
-import { startOfMonth } from 'date-fns';
+import { startOfMonth, parse } from 'date-fns';
 import channels from 'common/channels';
 import { fields, transactionTypes, defaultCategories } from './config';
 import {
@@ -12,6 +12,9 @@ import {
 
 const { ipcRenderer } = window.electron;
 
+/**
+ * MODAL
+ */
 export const openModal = () => {
   ipcRenderer.send(channels.OPEN_MODAL);
 };
@@ -20,6 +23,46 @@ export const closeModal = () => {
   ipcRenderer.send(channels.CLOSE_MODAL);
 };
 
+export const addTransaction = (data) => {
+  ipcRenderer.send(channels.ADD_TRANSACTION, data);
+};
+
+// Handle new transaction fields
+function createTransaction() {
+  //   const defaultTransaction = fields.reduce((insertedFields, field) => {
+  //     const defaultValues = {
+  //       type: transactionTypes[0],
+  //       // category: categories[0],
+  //     };
+  //     return {
+  //       ...insertedFields,
+  //       [field.id]: defaultValues[field.id] || '',
+  //     };
+  //   }, {});
+  //   const { subscribe, set, update } = writable(defaultTransaction);
+  //   return {
+  //     subscribe,
+  //     update,
+  //     set,
+  //     reset: () => {
+  //       update((transaction) =>
+  //         Object.keys(transaction).reduce(
+  //           (a, b) => ({
+  //             ...a,
+  //             [b]: b === 'type' ? transaction[b] : '', // Do not reset type
+  //           }),
+  //           {},
+  //         ),
+  //       );
+  //     },
+  //   };
+}
+
+export const newTransaction = createTransaction();
+
+/**
+ * APP
+ */
 // Temp initial amounts
 const getInitialAmount = (account) => {
   const initialAmount = {
@@ -78,6 +121,12 @@ export const accounts = writable([]);
 // Store categories
 export const categories = writable([]);
 
+export const setTransactions = (data) => {
+  const result = parseTransactions(data);
+  transactions.set(result);
+  return result;
+};
+
 // Fetch transactions
 export const fetchData = async (periodRange) => {
   // TODO - Use Promise.all to wait for all functions to resolve
@@ -85,8 +134,7 @@ export const fetchData = async (periodRange) => {
     channels.FETCH_TRANSACTIONS,
     periodRange,
   );
-  const result = parseTransactions(data);
-  transactions.set(result);
+  const result = setTransactions(data);
   // TODO - Set elsewhere, not in App mounted as we don't need it yet
   setAccounts(data);
   setCategories(data);
@@ -159,36 +207,3 @@ function setCategories(transactions) {
   }));
   categories.set(result);
 }
-
-// Handle new transaction fields
-function createTransaction() {
-  //   const defaultTransaction = fields.reduce((insertedFields, field) => {
-  //     const defaultValues = {
-  //       type: transactionTypes[0],
-  //       // category: categories[0],
-  //     };
-  //     return {
-  //       ...insertedFields,
-  //       [field.id]: defaultValues[field.id] || '',
-  //     };
-  //   }, {});
-  //   const { subscribe, set, update } = writable(defaultTransaction);
-  //   return {
-  //     subscribe,
-  //     update,
-  //     set,
-  //     reset: () => {
-  //       update((transaction) =>
-  //         Object.keys(transaction).reduce(
-  //           (a, b) => ({
-  //             ...a,
-  //             [b]: b === 'type' ? transaction[b] : '', // Do not reset type
-  //           }),
-  //           {},
-  //         ),
-  //       );
-  //     },
-  //   };
-}
-
-export const newTransaction = createTransaction();

@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { isAfter } from "date-fns";
   import { fetchData, wealthAmount, openModal } from "./stores";
+  import registerIpcRenderer from "./registerIpcRenderer";
   import { formatCurrencyAmount } from "./helper";
   import HomeView from "./views/Home.svelte";
   import EvolutionsView from "./views/Evolutions.svelte";
@@ -35,6 +36,7 @@
 
   onMount(async () => {
     isLoading = true;
+    registerIpcRenderer();
     await fetchData();
     isLoading = false;
   });
