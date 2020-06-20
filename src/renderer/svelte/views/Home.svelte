@@ -15,7 +15,7 @@
     transactions,
     getOldestDate,
     getLatestDate
-  } from "../stores";
+  } from "../store";
   import TransactionList from "../components/TransactionList.svelte";
   import AmountListTypes from "../components/AmountListTypes.svelte";
   import AmountListCategories from "../components/AmountListCategories.svelte";

@@ -1,5 +1,5 @@
 <script>
-  import { accounts } from "../stores.js";
+  import { accounts } from "../store";
 
   let selectedAccount = "";
 

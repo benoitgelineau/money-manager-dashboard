@@ -1,6 +1,6 @@
 <script>
   import DashboardContainer from "./DashboardContainer.svelte";
-  import { filteredTransactions, categories } from "../stores";
+  import { filteredTransactions, categories } from "../store";
   import { getTotalAmountBy, formatCurrencyAmount } from "../helper";
 
   let categoriesData = getExpenseCategoriesData();
@@ -49,8 +49,7 @@
     );
   }
 
-  $: categoriesData =
-    $filteredTransactions && $categories && getExpenseCategoriesData();
+  $: categoriesData = $categories && getExpenseCategoriesData();
 </script>
 
 <style>

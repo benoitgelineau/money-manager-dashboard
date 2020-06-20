@@ -1,6 +1,6 @@
 <script>
   import DashboardContainer from "./DashboardContainer.svelte";
-  import { filteredTransactions } from "../stores";
+  import { filteredTransactions } from "../store";
   import { getTotalAmountBy, formatCurrencyAmount } from "../helper";
 
   // TODO - Be able to tag an account (as Investment to display total amount in here)

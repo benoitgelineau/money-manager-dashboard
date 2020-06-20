@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { addTransaction, closeModal } from "../stores";
+  import { addTransaction, closeModal } from "../store/actions";
   import registerIpcRenderer from "../registerIpcRenderer";
 
   function sendTransaction() {

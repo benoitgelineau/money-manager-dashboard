@@ -1,7 +1,8 @@
 <script>
   import { onMount } from "svelte";
   import { isAfter } from "date-fns";
-  import { fetchData, wealthAmount, openModal } from "./stores";
+  import { isLoading, wealthAmount } from "./store";
+  import { fetchTransactions, openModal } from "./store/actions";
   import registerIpcRenderer from "./registerIpcRenderer";
   import { formatCurrencyAmount } from "./helper";
   import HomeView from "./views/Home.svelte";
@@ -24,7 +25,6 @@
     }
   ];
   let currentView = "home";
-  let isLoading = false;
 
   function showView(id) {
     currentView = id;
@@ -34,11 +34,9 @@
     openModal();
   }
 
-  onMount(async () => {
-    isLoading = true;
+  onMount(() => {
     registerIpcRenderer();
-    await fetchData();
-    isLoading = false;
+    fetchTransactions();
   });
 </script>
 
@@ -146,13 +144,17 @@
     </div>
   </div>
 
-  <div id="page-content">
-    {#if currentView === 'home'}
-      <HomeView />
-    {:else if currentView === 'evolutions'}
-      <EvolutionsView />
-    {:else if currentView === 'investments'}
-      <p>TODO</p>
-    {/if}
-  </div>
+  {#if $isLoading}
+    <p>Chargement</p>
+  {:else}
+    <div id="page-content">
+      {#if currentView === 'home'}
+        <HomeView />
+      {:else if currentView === 'evolutions'}
+        <EvolutionsView />
+      {:else if currentView === 'investments'}
+        <p>TODO</p>
+      {/if}
+    </div>
+  {/if}
 </main>

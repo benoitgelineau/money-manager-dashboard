@@ -1,5 +1,5 @@
 <script>
-  import { accountsData } from "../stores";
+  import { totalAccountAmounts } from "../store";
   import { formatCurrencyAmount } from "../helper";
 </script>
 
@@ -31,7 +31,7 @@
 </style>
 
 <ul>
-  {#each $accountsData as { label, amount }}
+  {#each $totalAccountAmounts as { label, amount }}
     <li>
       <div class="label">{label}</div>
       <div class="absolute-value">{formatCurrencyAmount(amount, 2)}</div>
