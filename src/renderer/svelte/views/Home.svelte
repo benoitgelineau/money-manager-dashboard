@@ -20,8 +20,6 @@
   import AmountListTypes from "../components/AmountListTypes.svelte";
   import AmountListCategories from "../components/AmountListCategories.svelte";
 
-  let allAvailableMonths = [];
-  let availableYears = [];
   let selectedPeriod = "month";
 
   function handlePeriodRangeChange(event) {
@@ -49,23 +47,25 @@
     }
   }
 
-  $: {
-    allAvailableMonths =
-      $getOldestDate && $getLatestDate
-        ? eachMonthOfInterval({
-            start: $getOldestDate,
-            end: $getLatestDate
-          })
-            .map(date => ({
-              label: format(date, "MMMM yyyy", { locale: frLocale }),
-              value: new Date(date)
-            }))
-            .sort((a, b) => b.value - a.value)
-        : [];
-    availableYears = removeDuplicates(
-      allAvailableMonths.map(({ value }) => value.getFullYear())
-    );
+  function getAllAvailableMonths(oldestDate, latestDate) {
+    if (!oldestDate || !latestDate) {
+      return [];
+    }
+    return eachMonthOfInterval({
+      start: oldestDate,
+      end: latestDate
+    })
+      .map(date => ({
+        label: format(date, "MMMM yyyy", { locale: frLocale }),
+        value: new Date(date)
+      }))
+      .sort((a, b) => b.value - a.value);
   }
+
+  $: allAvailableMonths = getAllAvailableMonths($getOldestDate, $getLatestDate);
+  $: availableYears = removeDuplicates(
+    allAvailableMonths.map(({ value }) => value.getFullYear())
+  );
 </script>
 
 <style>

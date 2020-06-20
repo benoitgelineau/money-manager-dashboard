@@ -1,6 +1,5 @@
 <script>
   export let title, list;
-  let withRelativeValue = false;
 
   $: withRelativeValue = list.length > 0 && list[0].values.length > 1;
 </script>

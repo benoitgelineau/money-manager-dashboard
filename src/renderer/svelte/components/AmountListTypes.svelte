@@ -14,11 +14,10 @@
       label: "Dépenses"
     }
   ];
-  let typesData = getTypesData();
 
-  function getTypesData() {
+  function getTypesData(transactions) {
     return types.map(({ id, label }) => {
-      const totalAmount = getTotalAmountBy("type", id, $filteredTransactions);
+      const totalAmount = getTotalAmountBy("type", id, transactions);
       return {
         id,
         label,
@@ -27,8 +26,7 @@
     });
   }
 
-  // Force to add $filteredTransactions to have data refreshing
-  $: typesData = $filteredTransactions && getTypesData();
+  $: typesData = getTypesData($filteredTransactions);
 </script>
 
 <style>

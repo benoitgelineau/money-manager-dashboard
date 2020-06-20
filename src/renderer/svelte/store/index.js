@@ -30,8 +30,8 @@ export const isLoading = writable(false);
 export const transactions = writable([]);
 export const newTransaction = createTransaction();
 
-export const startDate = writable(null); // TODO init with empty object
-export const endDate = writable(null);
+export const startDate = writable({});
+export const endDate = writable({});
 
 // Filter transactions list with period range
 export const filteredTransactions = derived(

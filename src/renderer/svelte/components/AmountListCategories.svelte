@@ -3,15 +3,13 @@
   import { filteredTransactions, categories } from "../store";
   import { getTotalAmountBy, formatCurrencyAmount } from "../helper";
 
-  let categoriesData = getExpenseCategoriesData();
-
-  function getExpenseCategoriesData() {
-    const categories = $categories.find(({ id }) => id === "expense");
-    if (!categories) {
+  function getExpenseCategoriesData(categories) {
+    const result = categories.find(({ id }) => id === "expense");
+    if (!result) {
       return [];
     }
     return (
-      categories.values
+      result.values
         // Get amounts
         .map(category => {
           const absoluteAmount = getTotalAmountBy(
@@ -49,7 +47,7 @@
     );
   }
 
-  $: categoriesData = $categories && getExpenseCategoriesData();
+  $: categoriesData = getExpenseCategoriesData($categories);
 </script>
 
 <style>
