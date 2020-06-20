@@ -1,7 +1,8 @@
 <script>
   import { onMount } from "svelte";
-  import { addTransaction, closeModal } from "../store/actions";
+  import { addTransaction, closeChildWindow } from "../store/actions";
   import registerIpcRenderer from "../registerIpcRenderer";
+  import TransactionForm from "./TransactionForm.svelte";
 
   function sendTransaction() {
     const mockTransferTx = {
@@ -14,10 +15,6 @@
       amount: 100
     };
     addTransaction(mockTransferTx);
-  }
-
-  function closeFormModal() {
-    closeModal();
   }
 
   onMount(() => {
@@ -59,7 +56,7 @@
 
 <div id="window-bar">
   <p>Ajouter une transaction</p>
-  <button on:click={closeFormModal}>X</button>
+  <button on:click={closeChildWindow}>X</button>
 </div>
 
 <main>

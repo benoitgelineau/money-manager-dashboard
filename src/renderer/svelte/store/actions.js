@@ -33,12 +33,12 @@ export const addTransaction = (data) => {
 };
 
 /**
- * MODAL
+ * WINDOWS
  */
-export const openModal = () => {
-  ipcRenderer.send(channels.OPEN_MODAL);
+export const openChildWindow = () => {
+  ipcRenderer.send(channels.OPEN_CHILD_WINDOW);
 };
 
-export const closeModal = () => {
-  ipcRenderer.send(channels.CLOSE_MODAL);
+export const closeChildWindow = () => {
+  ipcRenderer.send(channels.CLOSE_CHILD_WINDOW);
 };

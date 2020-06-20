@@ -2,12 +2,11 @@
   import { onMount } from "svelte";
   import { isAfter } from "date-fns";
   import { isLoading, wealthAmount } from "./store";
-  import { fetchTransactions, openModal } from "./store/actions";
+  import { fetchTransactions, openChildWindow } from "./store/actions";
   import registerIpcRenderer from "./registerIpcRenderer";
   import { formatCurrencyAmount } from "./helper";
   import HomeView from "./views/Home.svelte";
   import EvolutionsView from "./views/Evolutions.svelte";
-  import TransactionForm from "./components/TransactionForm.svelte";
   import AmountListAccounts from "./components/AmountListAccounts.svelte";
 
   const pages = [
@@ -30,8 +29,8 @@
     currentView = id;
   }
 
-  function openFormModal() {
-    openModal();
+  function openAddTransactionWindow() {
+    openChildWindow();
   }
 
   onMount(() => {
@@ -111,7 +110,7 @@
     <div id="app-version" />
     <!-- TODO - Toggle light/dark theme -->
   </div>
-  <button on:click={openFormModal}>+ Ajouter une transaction</button>
+  <button on:click={openAddTransactionWindow}>+ Ajouter une transaction</button>
 </header>
 
 <main>

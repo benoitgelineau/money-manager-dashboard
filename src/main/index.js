@@ -90,7 +90,7 @@ ipcMain.handle(channels.FETCH_TRANSACTIONS, async (event, periodRange) => {
   }
 });
 
-ipcMain.on(channels.OPEN_MODAL, () => {
+ipcMain.on(channels.OPEN_CHILD_WINDOW, () => {
   if (!!childWindow) {
     childWindow.focus();
     return;
@@ -98,7 +98,7 @@ ipcMain.on(channels.OPEN_MODAL, () => {
   createChildWindow();
 });
 
-ipcMain.on(channels.CLOSE_MODAL, () => {
+ipcMain.on(channels.CLOSE_CHILD_WINDOW, () => {
   if (!!childWindow) {
     childWindow.close();
   }
