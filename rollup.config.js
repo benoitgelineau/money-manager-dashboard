@@ -67,18 +67,20 @@ export default [
     },
   },
   {
-    input: 'src/renderer/svelte/modals/index.js',
+    input: 'src/renderer/svelte/childWindows/addTransaction.js',
     output: {
       sourcemap: true,
       format: 'iife',
-      name: 'modals',
-      file: 'public/modals/build/bundle.js',
+      name: 'addTransaction',
+      file: 'public/childWindows/addTransaction/build/bundle.js',
     },
     plugins: [
       ...defaultPlugins,
       svelte({
-        // enable run-time checks when not in production
         dev: !production,
+        css: (css) => {
+          css.write('public/childWindows/addTransaction/build/bundle.css');
+        },
       }),
     ],
     watch: {
