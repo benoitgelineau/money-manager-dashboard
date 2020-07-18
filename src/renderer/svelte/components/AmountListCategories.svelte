@@ -3,8 +3,8 @@
   import { filteredTransactions, categories } from "../store";
   import { getTotalAmountBy, formatCurrencyAmount } from "../helper";
 
-  function getExpenseCategoriesData(categories) {
-    const result = categories.find(({ id }) => id === "expense");
+  $: categoriesData = () => {
+    const result = $categories.find(({ id }) => id === "expense");
     if (!result) {
       return [];
     }
@@ -45,9 +45,7 @@
           };
         })
     );
-  }
-
-  $: categoriesData = getExpenseCategoriesData($categories);
+  };
 </script>
 
 <style>
@@ -59,5 +57,5 @@
 <div class="dashboard-container">
   <DashboardContainer
     title="Répartition des dépenses par catégorie"
-    list={categoriesData} />
+    list={categoriesData()} />
 </div>

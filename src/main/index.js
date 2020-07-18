@@ -47,8 +47,10 @@ function createMainWindow() {
 function createChildWindow() {
   childWindow = new BrowserWindow({
     ...defaultBrowserWindowOptions,
-    width: 600,
-    height: 350,
+    width: 650,
+    height: 450,
+    minWidth: 650,
+    minHeight: 450,
     frame: false,
     parent: mainWindow, // Always on top of mainWindow
     // modal: true, // Dark background and fixed position
@@ -107,6 +109,8 @@ ipcMain.on(channels.CLOSE_CHILD_WINDOW, () => {
 ipcMain.on(channels.ADD_TRANSACTION, async (event, data) => {
   await addRow(data);
   const transactions = await getRows();
+  // Update store in child window
+  event.sender.send(channels.SET_TRANSACTIONS, transactions);
   // Update store in main window
   mainWindow.webContents.send(channels.SET_TRANSACTIONS, transactions);
 });

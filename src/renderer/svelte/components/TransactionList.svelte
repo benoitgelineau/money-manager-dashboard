@@ -1,6 +1,15 @@
 <script>
   import { fields } from "../config";
   import { formattedTransactions } from "../store";
+
+  const fieldsLabels = fields.map(field =>
+    field.id === "type"
+      ? {
+          ...field,
+          id: "typeLabel"
+        }
+      : field
+  );
 </script>
 
 <style>
@@ -67,7 +76,7 @@
 <table class="transaction-list">
   <thead>
     <tr>
-      {#each fields as { label }}
+      {#each fieldsLabels as { label }}
         <th>{label}</th>
       {/each}
     </tr>
@@ -75,7 +84,7 @@
   <tbody>
     {#each $formattedTransactions as transaction}
       <tr>
-        {#each fields as { id }}
+        {#each fieldsLabels as { id }}
           <td data-id={id}>{transaction[id]}</td>
         {/each}
       </tr>

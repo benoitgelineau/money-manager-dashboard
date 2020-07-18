@@ -4,7 +4,7 @@ export const fields = [
     label: 'Date',
   },
   {
-    id: 'typeLabel',
+    id: 'type',
     label: 'Type',
   },
   {

@@ -1,4 +1,5 @@
 import { writable, derived } from 'svelte/store';
+import { format } from 'date-fns';
 import { fields, transactionTypes, defaultCategories } from '../config';
 import {
   filterTransactions,
@@ -21,6 +22,8 @@ const getInitialAmount = (account) => {
     ? initialAmount[account]
     : 0;
 };
+// Temp store main account (should be store with csv filepath in user settings)
+export const MAIN_ACCOUNT = 'Crédit Coopératif - CCP';
 
 /**
  * STATE
@@ -28,7 +31,7 @@ const getInitialAmount = (account) => {
 export const isLoading = writable(false);
 
 export const transactions = writable([]);
-export const newTransaction = createTransaction();
+// export const newTransaction = createTransaction();
 
 export const startDate = writable({});
 export const endDate = writable({});
@@ -140,32 +143,35 @@ export const setEndDate = (date) => {
 };
 
 // Handle new transaction fields
-function createTransaction() {
-  //   const defaultTransaction = fields.reduce((insertedFields, field) => {
-  //     const defaultValues = {
-  //       type: transactionTypes[0],
-  //       // category: categories[0],
-  //     };
-  //     return {
-  //       ...insertedFields,
-  //       [field.id]: defaultValues[field.id] || '',
-  //     };
-  //   }, {});
-  //   const { subscribe, set, update } = writable(defaultTransaction);
-  //   return {
-  //     subscribe,
-  //     update,
-  //     set,
-  //     reset: () => {
-  //       update((transaction) =>
-  //         Object.keys(transaction).reduce(
-  //           (a, b) => ({
-  //             ...a,
-  //             [b]: b === 'type' ? transaction[b] : '', // Do not reset type
-  //           }),
-  //           {},
-  //         ),
-  //       );
-  //     },
-  //   };
-}
+// function createTransaction() {
+//   const defaultTransaction = fields.reduce((insertedFields, field) => {
+//     const defaultValues = {
+//       type: transactionTypes[0],
+//       date: format(Date.now(), 'yyyy-MM-dd'),
+//       source: MAIN_ACCOUNT,
+//       // category: categories[0],
+//     };
+//     return {
+//       ...insertedFields,
+//       [field.id]: defaultValues[field.id] || '',
+//     };
+//   }, {});
+//   const { subscribe, set, update } = writable(defaultTransaction);
+//   return {
+//     subscribe,
+//     update,
+//     set,
+//     reset: () => {
+//       update((transaction) => {
+//         const notToResetFields = ['type', 'date'];
+//         return Object.keys(transaction).reduce(
+//           (a, b) => ({
+//             ...a,
+//             [b]: notToResetFields.includes(b) ? transaction[b] : '',
+//           }),
+//           {},
+//         );
+//       });
+//     },
+//   };
+// }

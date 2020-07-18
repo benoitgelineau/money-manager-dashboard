@@ -1,24 +1,13 @@
 <script>
   import { onMount } from "svelte";
-  import { addTransaction, closeChildWindow } from "../store/actions";
   import registerIpcRenderer from "../registerIpcRenderer";
+  import { closeChildWindow, fetchTransactions } from "../store/actions";
   import TransactionForm from "./TransactionForm.svelte";
-
-  function sendTransaction() {
-    const mockTransferTx = {
-      date: "2020-06-01",
-      type: "transfer",
-      description: "",
-      category: "",
-      source: "VSCode",
-      beneficiary: "Me",
-      amount: 100
-    };
-    addTransaction(mockTransferTx);
-  }
 
   onMount(() => {
     registerIpcRenderer();
+    // Temp fetchTransactions to sync store with main window one
+    fetchTransactions();
   });
 </script>
 
@@ -52,6 +41,11 @@
   #window-bar button:hover {
     opacity: 0.8;
   }
+
+  main {
+    width: 100%;
+    height: calc(100% - 30px);
+  }
 </style>
 
 <div id="window-bar">
@@ -60,5 +54,5 @@
 </div>
 
 <main>
-  <button on:click={sendTransaction}>Ajouter</button>
+  <TransactionForm />
 </main>

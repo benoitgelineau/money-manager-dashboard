@@ -60,3 +60,37 @@ export const formatCurrencyAmount = (value, decimals) => {
     // maximumSignificantDigits: 3,
   }).format(value);
 };
+
+export const convertAmountToFloat = (amount) =>
+  parseFloat(amount.replace(/\s/g, '').split(',').join('.'));
+
+export const formatInputAmount = (amount) => {
+  let parsedAmount = amount;
+  const nonDigit = /[^0-9,]/g;
+  // Remove non-digit characters
+  parsedAmount = parsedAmount.replace(nonDigit, '');
+
+  const splittedParsedAmount = parsedAmount.split(',');
+  let numberOfDecimals = 0;
+  let shouldAddTrailingComma = false;
+
+  if (splittedParsedAmount.length > 1) {
+    const { length } = splittedParsedAmount[1];
+    if (length > 2) {
+      // Prevent adding more than 2 decimals
+      parsedAmount = parsedAmount.slice(0, -1);
+    }
+    numberOfDecimals = Math.min(length, 2);
+    shouldAddTrailingComma = length === 0;
+  }
+  // Format number with locale
+  parsedAmount = convertAmountToFloat(parsedAmount).toLocaleString('fr-FR', {
+    minimumFractionDigits: numberOfDecimals,
+  });
+
+  if (shouldAddTrailingComma) {
+    parsedAmount = `${parsedAmount},`;
+  }
+
+  return parsedAmount;
+};
