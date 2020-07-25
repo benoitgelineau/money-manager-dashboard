@@ -161,6 +161,18 @@ export const setAccountSelected = ({ name, selected }) => {
     ),
   );
 };
+export const setAccountType = ({ name, type }) => {
+  accounts.update((storedAccounts) =>
+    storedAccounts.map((account) =>
+      account.name === name
+        ? {
+            ...account,
+            type,
+          }
+        : account,
+    ),
+  );
+};
 export const setStartDate = (date) => {
   startDate.set(date);
 };

@@ -1,5 +1,5 @@
 <script>
-  import { accounts, setAccountSelected } from "../store";
+  import { accounts, setAccountSelected, setAccountType } from "../store";
 
   const options = [
     {
@@ -17,8 +17,13 @@
   ];
 
   function handleCheckClick(event) {
-    const { name, checked } = event.target;
-    setAccountSelected({ name, selected: checked });
+    const { name, checked: selected } = event.target;
+    setAccountSelected({ name, selected });
+  }
+
+  function handleTypeChange(event) {
+    const { name, value: type } = event.target;
+    setAccountType({ name, type });
   }
 
   $: sortedAccounts = [...$accounts]
@@ -94,7 +99,7 @@
           checked={selected} />
         <label for={name} class="label">{name}</label>
       </div>
-      <select>
+      <select {name} bind:value={type} on:change={handleTypeChange}>
         {#each options as { id, label }}
           <option value={id} selected={id === type}>{label}</option>
         {/each}
