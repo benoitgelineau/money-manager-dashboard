@@ -1,11 +1,18 @@
 <script>
-  import { totalAccountAmounts } from "../store";
+  import { totalAccountAmounts, selectedAccounts } from "../store";
   import { formatCurrencyAmount } from "../helper";
+
+  $: displayedAccounts = $totalAccountAmounts.filter(({ label }) =>
+    $selectedAccounts.map(({ name }) => name).includes(label)
+  );
 </script>
 
 <style>
   ul {
+    min-height: 0;
     padding: 0;
+    margin: 0;
+    overflow-y: auto;
   }
 
   li {
@@ -31,7 +38,7 @@
 </style>
 
 <ul>
-  {#each $totalAccountAmounts as { label, amount }}
+  {#each displayedAccounts as { label, amount }}
     <li>
       <div class="label">{label}</div>
       <div class="absolute-value">{formatCurrencyAmount(amount, 2)}</div>

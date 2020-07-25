@@ -15,7 +15,7 @@ const getInitialAmount = (account) => {
     'La Banque Postale - LDDS': 4209.98,
     'Crédit Coopératif - CCP': 300,
     'Crédit Coopératif - LDDS': 10,
-    'Assurance-vie - LINXEA Avenir': 3000,
+    'LINXEA Avenir - Assurance-vie - Epargne': 3000,
     'BforBank - PEA': 1305.19,
   };
   return Object.keys(initialAmount).includes(account)
@@ -31,6 +31,7 @@ export const MAIN_ACCOUNT = 'Crédit Coopératif - CCP';
 export const isLoading = writable(false);
 
 export const transactions = writable([]);
+export const accounts = writable([]);
 // export const newTransaction = createTransaction();
 
 export const startDate = writable({});
@@ -53,29 +54,15 @@ export const formattedTransactions = derived(
 );
 
 export const getOldestDate = derived(transactions, ($transactions) =>
+  $transactions.length > 0 ? new Date($transactions[0].date) : null,
+);
+
+export const getLatestDate = derived(transactions, ($transactions) =>
   // $transactions.length > 0 ? new Date([...$transactions].pop().date) : null,
   $transactions.length > 0
     ? new Date($transactions[$transactions.length - 1].date)
     : null,
 );
-
-export const getLatestDate = derived(transactions, ($transactions) =>
-  $transactions.length > 0 ? new Date($transactions[0].date) : null,
-);
-
-export const accounts = derived(transactions, ($transactions) => {
-  const result = $transactions.flatMap(({ type, source, beneficiary }) => {
-    switch (type) {
-      case 'transfer':
-        return [source, beneficiary];
-      case 'income':
-        return beneficiary;
-      case 'expense':
-        return source;
-    }
-  });
-  return removeDuplicates(result);
-});
 
 export const categories = derived(transactions, ($transactions) => {
   const getCategoriesByType = (id) =>
@@ -90,29 +77,36 @@ export const categories = derived(transactions, ($transactions) => {
   }));
 });
 
+export const selectedAccounts = derived(accounts, ($accounts) =>
+  $accounts.filter((account) => !!account.selected),
+);
+
 export const totalAccountAmounts = derived(
   [accounts, transactions],
   ([$accounts, $transactions]) => {
-    return $accounts.sort().map((account) => {
-      const totalAmount = $transactions.reduce((amount, transaction) => {
-        const shouldIncreaseAmount =
-          transaction.beneficiary === account &&
-          (transaction.type === 'income' || transaction.type === 'transfer');
-        const shouldDecreaseAmount =
-          transaction.source === account &&
-          (transaction.type === 'expense' || transaction.type === 'transfer');
-        if (shouldIncreaseAmount) {
-          return amount + parseFloat(transaction.amount);
-        } else if (shouldDecreaseAmount) {
-          return amount - parseFloat(transaction.amount);
-        }
-        return amount;
-      }, 0);
-      return {
-        label: account,
-        amount: totalAmount + getInitialAmount(account),
-      };
-    });
+    return $accounts
+      .map(({ name }) => name)
+      .sort()
+      .map((accountName) => {
+        const totalAmount = $transactions.reduce((amount, transaction) => {
+          const shouldIncreaseAmount =
+            transaction.beneficiary === accountName &&
+            (transaction.type === 'income' || transaction.type === 'transfer');
+          const shouldDecreaseAmount =
+            transaction.source === accountName &&
+            (transaction.type === 'expense' || transaction.type === 'transfer');
+          if (shouldIncreaseAmount) {
+            return amount + parseFloat(transaction.amount);
+          } else if (shouldDecreaseAmount) {
+            return amount - parseFloat(transaction.amount);
+          }
+          return amount;
+        }, 0);
+        return {
+          label: accountName,
+          amount: totalAmount + getInitialAmount(accountName),
+        };
+      });
   },
 );
 
@@ -134,6 +128,38 @@ export const setIsLoading = (bool) => {
 };
 export const setTransactions = (data) => {
   transactions.set(data);
+};
+export const setAccounts = (transactions) => {
+  const parsedAccounts = transactions.flatMap(
+    ({ type, source, beneficiary }) => {
+      switch (type) {
+        case 'transfer':
+          return [source, beneficiary];
+        case 'income':
+          return beneficiary;
+        case 'expense':
+          return source;
+      }
+    },
+  );
+  const result = removeDuplicates(parsedAccounts).map((account) => ({
+    name: account,
+    type: 'current',
+    selected: true,
+  }));
+  accounts.set(result);
+};
+export const setAccountSelected = ({ name, selected }) => {
+  accounts.update((storedAccounts) =>
+    storedAccounts.map((account) =>
+      account.name === name
+        ? {
+            ...account,
+            selected,
+          }
+        : account,
+    ),
+  );
 };
 export const setStartDate = (date) => {
   startDate.set(date);

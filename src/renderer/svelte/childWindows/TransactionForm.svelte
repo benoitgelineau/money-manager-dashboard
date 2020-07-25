@@ -185,12 +185,12 @@
           bind:value={newTransaction.source}
           on:change={handleValueChange}>
           <option value="" disabled>Choisis un compte</option>
-          {#each $accounts as account}
+          {#each $accounts as { name }}
             <option
-              value={account}
-              selected={account === newTransaction.source}
-              disabled={account === newTransaction.beneficiary}>
-              {account}
+              value={name}
+              selected={name === newTransaction.source}
+              disabled={name === newTransaction.beneficiary}>
+              {name}
             </option>
           {/each}
         </select>

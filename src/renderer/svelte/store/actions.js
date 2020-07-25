@@ -2,6 +2,7 @@ import { startOfMonth } from 'date-fns';
 import channels from 'common/channels';
 import {
   setTransactions,
+  setAccounts,
   setStartDate,
   setEndDate,
   setIsLoading,
@@ -21,7 +22,8 @@ export const fetchTransactions = async (periodRange) => {
   );
   const result = parseTransactions(data);
   setTransactions(result);
-  const latest = new Date(result[0].date);
+  setAccounts(result);
+  const latest = new Date(result[result.length - 1].date);
   // Set period to last existing month
   setStartDate(startOfMonth(latest));
   setEndDate(latest);

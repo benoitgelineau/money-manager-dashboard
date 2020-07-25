@@ -45,11 +45,12 @@ exports.addRow = (row) => {
     });
     await csvWriterAppend.writeRecords([row]);
     const rows = await getAllRows();
-    const sortedRows = rows.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // Sort if original rows are in descending order
+    // const sortedRows = rows.sort((a, b) => new Date(b.date) - new Date(a.date));
     const csvWriter = createCsvWriter({
       path: CSV_FILEPATH,
       header: csvHeader,
     });
-    csvWriter.writeRecords(sortedRows).then(() => resolve());
+    csvWriter.writeRecords(rows).then(() => resolve());
   });
 };

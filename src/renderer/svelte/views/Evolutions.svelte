@@ -11,8 +11,8 @@
 <label for="select-account">Compte</label>
 <select name="account-select" id="select-account" bind:value={selectedAccount}>
   <option value="" disabled>Choisis un compte</option>
-  {#each $accounts as account}
-    <option value={account}>{account}</option>
+  {#each $accounts as { name }}
+    <option value={name}>{name}</option>
   {/each}
 </select>
 

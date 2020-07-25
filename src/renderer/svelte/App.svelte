@@ -7,6 +7,7 @@
   import { formatCurrencyAmount } from "./helper";
   import HomeView from "./views/Home.svelte";
   import EvolutionsView from "./views/Evolutions.svelte";
+  import AccountSettings from "./views/AccountSettings.svelte";
   import AmountListAccounts from "./components/AmountListAccounts.svelte";
 
   const pages = [
@@ -66,6 +67,11 @@
   #sidebar {
     flex: 0 0 200px;
     max-width: 200px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
     margin-right: 20px;
   }
 
@@ -94,6 +100,28 @@
 
   nav li[data-active="true"] button {
     color: black;
+  }
+
+  #account-list-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
+
+  #account-list-container #header {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  #account-settings {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    cursor: pointer;
   }
 
   #page-content {
@@ -126,7 +154,7 @@
         {/each}
       </ul>
     </nav>
-    <hr />
+    <hr style="width: 100%;" />
     <div id="balance-amount">
       <p>
         Patrimoine :
@@ -134,11 +162,17 @@
         <!-- TODO - {arrow icon} with evolution from month-1 in % -->
       </p>
     </div>
-    <div>
-      <p>
-        <u>Comptes</u>
-      </p>
-      <!-- <button id="account-settings">Gérer mes comptes</button> -->
+    <div id="account-list-container">
+      <div id="header">
+        <p>
+          <u>Comptes</u>
+        </p>
+        <button
+          id="account-settings"
+          on:click={() => showView('account-settings')}>
+          Icon
+        </button>
+      </div>
       <AmountListAccounts />
     </div>
   </div>
@@ -153,6 +187,8 @@
         <EvolutionsView />
       {:else if currentView === 'investments'}
         <p>TODO</p>
+      {:else if currentView === 'account-settings'}
+        <AccountSettings />
       {/if}
     </div>
   {/if}
