@@ -3,6 +3,7 @@ import channels from 'common/channels';
 import {
   setTransactions,
   setAccounts,
+  setUserSettings,
   setStartDate,
   setEndDate,
   setIsLoading,
@@ -32,6 +33,19 @@ export const fetchTransactions = async (periodRange) => {
 
 export const addTransaction = (data) => {
   ipcRenderer.send(channels.ADD_TRANSACTION, data);
+};
+
+export const updateUserSettings = async ({ key, value }) => {
+  const settings = await ipcRenderer.invoke(channels.SET_USER_SETTINGS, {
+    key,
+    value,
+  });
+  setUserSettings(settings);
+};
+
+export const loadSettings = async () => {
+  const settings = await ipcRenderer.invoke(channels.GET_USER_SETTINGS);
+  setUserSettings(settings);
 };
 
 /**

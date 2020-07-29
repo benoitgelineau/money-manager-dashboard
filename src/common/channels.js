@@ -4,4 +4,6 @@ module.exports = {
   OPEN_CHILD_WINDOW: 'open.child.window',
   CLOSE_CHILD_WINDOW: 'close.child.window',
   ADD_TRANSACTION: 'add.transaction',
+  GET_USER_SETTINGS: 'get.user.settings',
+  SET_USER_SETTINGS: 'set.user.settings',
 };

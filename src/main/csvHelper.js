@@ -2,18 +2,39 @@ const csvParser = require('csv-parser');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
 const { isAfter, isBefore, isEqual } = require('date-fns');
+const UserSettings = require('./userSettings');
 
-const CSV_FILEPATH = '/home/benblock/Documents/Budget/transactions_2020.csv';
-exports.CSV_FILEPATH = CSV_FILEPATH;
+const CSV_FILEPATH = UserSettings.instance.csvFilePath();
 
 const csvHeader = [
-  { id: 'date', title: 'date' },
-  { id: 'type', title: 'type' },
-  { id: 'description', title: 'description' },
-  { id: 'category', title: 'category' },
-  { id: 'source', title: 'source' },
-  { id: 'beneficiary', title: 'beneficiary' },
-  { id: 'amount', title: 'amount' },
+  {
+    id: 'date',
+    title: 'date',
+  },
+  {
+    id: 'type',
+    title: 'type',
+  },
+  {
+    id: 'description',
+    title: 'description',
+  },
+  {
+    id: 'category',
+    title: 'category',
+  },
+  {
+    id: 'source',
+    title: 'source',
+  },
+  {
+    id: 'beneficiary',
+    title: 'beneficiary',
+  },
+  {
+    id: 'amount',
+    title: 'amount',
+  },
 ];
 
 function getAllRows() {

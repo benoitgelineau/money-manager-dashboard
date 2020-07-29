@@ -3,7 +3,8 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const channels = require('../common/channels');
-const { getRows, CSV_FILEPATH, addRow } = require('./csvHelper');
+const { getRows, addRow } = require('./csvHelper');
+const UserSettings = require('./userSettings');
 
 const defaultBrowserWindowOptions = {
   show: false,
@@ -83,7 +84,7 @@ require('electron-reload')(__dirname, {
 // Event listeners
 ipcMain.handle(channels.FETCH_TRANSACTIONS, async (event, periodRange) => {
   try {
-    if (fs.existsSync(CSV_FILEPATH)) {
+    if (fs.existsSync(UserSettings.instance.csvFilePath())) {
       const data = await getRows(periodRange);
       return data;
     }
@@ -113,6 +114,25 @@ ipcMain.on(channels.ADD_TRANSACTION, async (event, data) => {
   event.sender.send(channels.SET_TRANSACTIONS, transactions);
   // Update store in main window
   mainWindow.webContents.send(channels.SET_TRANSACTIONS, transactions);
+});
+
+ipcMain.handle(channels.GET_USER_SETTINGS, () => {
+  try {
+    return UserSettings.instance.get();
+  } catch (error) {
+    console.log('[MAIN] cannot get user setttings', error);
+  }
+});
+
+ipcMain.handle(channels.SET_USER_SETTINGS, (event, { key, value }) => {
+  try {
+    UserSettings.instance.set(key, value);
+    return {
+      [key]: value,
+    };
+  } catch (error) {
+    console.log('[MAIN] cannot set user setttings', error);
+  }
 });
 
 // This method will be called when Electron has finished

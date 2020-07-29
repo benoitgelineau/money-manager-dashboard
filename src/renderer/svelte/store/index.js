@@ -31,8 +31,10 @@ export const MAIN_ACCOUNT = 'Crédit Coopératif - CCP';
 export const isLoading = writable(false);
 
 export const transactions = writable([]);
-export const accounts = writable([]);
 // export const newTransaction = createTransaction();
+export const accounts = writable([]);
+
+export const userSettings = writable({});
 
 export const startDate = writable({});
 export const endDate = writable({});
@@ -78,7 +80,12 @@ export const categories = derived(transactions, ($transactions) => {
 });
 
 export const selectedAccounts = derived(accounts, ($accounts) =>
-  $accounts.filter((account) => !!account.selected),
+  $accounts
+    .filter((account) => !!account.selected)
+    .map(({ name, type }) => ({
+      name,
+      type,
+    })),
 );
 
 export const totalAccountAmounts = derived(
@@ -142,6 +149,7 @@ export const setAccounts = (transactions) => {
       }
     },
   );
+  // Set default values to be updated by stored settings
   const result = removeDuplicates(parsedAccounts).map((account) => ({
     name: account,
     type: 'current',
@@ -172,6 +180,31 @@ export const setAccountType = ({ name, type }) => {
         : account,
     ),
   );
+};
+export const setUserSettings = (settings) => {
+  userSettings.update((storedSettings) => ({
+    ...storedSettings,
+    ...settings,
+  }));
+  if (settings.accounts) {
+    accounts.update((storedAccounts) => {
+      return storedAccounts.map((account) => {
+        const foundAccount = settings.accounts.find(
+          (acc) => acc.name === account.name,
+        );
+        if (!!foundAccount) {
+          return {
+            ...account,
+            name: foundAccount.name,
+            type: foundAccount.type,
+            selected: foundAccount.selected || false,
+          };
+        } else {
+          return account;
+        }
+      });
+    });
+  }
 };
 export const setStartDate = (date) => {
   startDate.set(date);

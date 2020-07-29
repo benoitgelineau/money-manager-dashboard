@@ -2,7 +2,11 @@
   import { onMount } from "svelte";
   import { isAfter } from "date-fns";
   import { isLoading, wealthAmount } from "./store";
-  import { fetchTransactions, openChildWindow } from "./store/actions";
+  import {
+    fetchTransactions,
+    openChildWindow,
+    loadSettings
+  } from "./store/actions";
   import registerIpcRenderer from "./registerIpcRenderer";
   import { formatCurrencyAmount } from "./helper";
   import HomeView from "./views/Home.svelte";
@@ -37,6 +41,7 @@
   onMount(() => {
     registerIpcRenderer();
     fetchTransactions();
+    loadSettings();
   });
 </script>
 

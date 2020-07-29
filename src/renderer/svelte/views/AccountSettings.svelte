@@ -1,5 +1,6 @@
 <script>
   import { accounts, setAccountSelected, setAccountType } from "../store";
+  import { updateUserSettings } from "../store/actions";
 
   const options = [
     {
@@ -19,11 +20,19 @@
   function handleCheckClick(event) {
     const { name, checked: selected } = event.target;
     setAccountSelected({ name, selected });
+    updateUserSettings({
+      key: "accounts",
+      value: $accounts
+    });
   }
 
   function handleTypeChange(event) {
     const { name, value: type } = event.target;
     setAccountType({ name, type });
+    updateUserSettings({
+      key: "accounts",
+      value: $accounts
+    });
   }
 
   $: sortedAccounts = [...$accounts]
