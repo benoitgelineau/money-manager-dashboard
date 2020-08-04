@@ -1,5 +1,6 @@
 import { writable, derived } from 'svelte/store';
 import { format } from 'date-fns';
+import { ACCOUNT_TYPE } from 'common/staticKeys';
 import { fields, transactionTypes, defaultCategories } from '../config';
 import {
   filterTransactions,
@@ -152,7 +153,7 @@ export const setAccounts = (transactions) => {
   // Set default values to be updated by stored settings
   const result = removeDuplicates(parsedAccounts).map((account) => ({
     name: account,
-    type: 'current',
+    type: ACCOUNT_TYPE.CURRENT,
     selected: true,
   }));
   accounts.set(result);

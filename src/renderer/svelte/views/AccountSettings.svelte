@@ -1,18 +1,19 @@
 <script>
+  import { ACCOUNT_TYPE } from 'common/staticKeys';
   import { accounts, setAccountSelected, setAccountType } from "../store";
   import { updateUserSettings } from "../store/actions";
 
-  const options = [
+  export const accountTypeList = [
     {
-      id: "current",
+      id: ACCOUNT_TYPE.CURRENT,
       label: "Courant"
     },
     {
-      id: "savings",
+      id: ACCOUNT_TYPE.SAVINGS,
       label: "Epargne"
     },
     {
-      id: "investment",
+      id: ACCOUNT_TYPE.INVESTMENT,
       label: "Investissement"
     }
   ];
@@ -109,7 +110,7 @@
         <label for={name} class="label">{name}</label>
       </div>
       <select {name} bind:value={type} on:change={handleTypeChange}>
-        {#each options as { id, label }}
+        {#each accountTypeList as { id, label }}
           <option value={id} selected={id === type}>{label}</option>
         {/each}
       </select>
