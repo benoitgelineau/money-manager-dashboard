@@ -18,6 +18,7 @@
   ],
   "author": "B. Gelineau <bgelineau.dev@gmail.com>",
   "dependencies": {
+    "apexcharts": "^3.20.0",
     "concurrently": "^5.2.0",
     "csv-parser": "^2.3.2",
     "csv-writer": "^1.6.0",

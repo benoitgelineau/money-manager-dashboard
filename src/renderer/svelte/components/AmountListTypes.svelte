@@ -1,4 +1,6 @@
 <script>
+  import { onMount } from 'svelte';
+  import ApexCharts from 'apexcharts';
   import { ACCOUNT_TYPE } from 'common/staticKeys';
   import DashboardContainer from "./DashboardContainer.svelte";
   import { filteredTransactions, accounts } from "../store";
@@ -30,6 +32,7 @@
       getTotalAmount: getTotalSavingsAmountByType,
     }
   ];
+  let chart, chartContainer;
 
   function getTotalCurrentAmountById({ id, transactions, accounts }) {
     if (!['income', 'expense'].includes(id)) {
@@ -61,13 +64,12 @@
     }, 0);
   }
 
-  function getTypesData(transactions, accounts) {
+  function getSeriesData(transactions, accounts) {
     return types.map(({ id, accountType, label, getTotalAmount }) => {
       const totalAmount = getTotalAmount({ id, accountType, transactions, accounts });
       return {
-        id,
-        label,
-        values: [formatCurrencyAmount(totalAmount, 0)]
+        name: label,
+        data: [totalAmount]
       };
     });
   }
@@ -76,15 +78,75 @@
     return accounts.filter(({ type }) => type === accountType).map(({ name }) => name);
   }
 
-  $: typesData = getTypesData($filteredTransactions, $accounts);
+  onMount(() => {
+    chart = new ApexCharts(chartContainer, {
+      chart: {
+        type: 'bar',
+        height: 350,
+        toolbar: {
+          show: false,
+        },
+      },
+      series: seriesData,
+      xaxis: {
+        categories: ['Montant'],
+        position: 'top',
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false
+        },
+      },
+      yaxis: {
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false,
+        },
+        labels: {
+          show: false,
+          formatter: function (val) {
+            return formatCurrencyAmount(val, 0);
+          }
+        }
+      },
+      plotOptions: {
+        bar: {
+          dataLabels: {
+            position: 'top', // top, center, bottom
+          },
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function (val) {
+          return formatCurrencyAmount(val, 0);
+        },
+        style: {
+          fontSize: '11px',
+          // colors: ["#304758"]
+        }
+      },
+    });
+    chart.render();
+  })
+
+  $: seriesData = getSeriesData($filteredTransactions, $accounts);
+  $: {
+    if (chart) {
+      chart.updateSeries(seriesData);
+    }
+  }
 </script>
 
 <style>
   .dashboard-container {
-    grid-area: 1 / 1 / 1 / 1;
+    grid-area: 1 / 1 / span 2 / 1;
   }
 </style>
 
 <div class="dashboard-container">
-  <DashboardContainer title="Répartition par type" list={typesData} />
+  <div bind:this={chartContainer} />
 </div>
