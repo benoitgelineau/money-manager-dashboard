@@ -2,7 +2,6 @@
   import { onMount } from 'svelte';
   import ApexCharts from 'apexcharts';
   import { ACCOUNT_TYPE } from 'common/staticKeys';
-  import DashboardContainer from "./DashboardContainer.svelte";
   import { filteredTransactions, accounts } from "../store";
   import { getTotalAmountBy, formatCurrencyAmount } from "../helper";
 

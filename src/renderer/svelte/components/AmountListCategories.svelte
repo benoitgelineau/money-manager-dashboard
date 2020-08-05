@@ -1,7 +1,33 @@
 <script>
-  import DashboardContainer from "./DashboardContainer.svelte";
+  import { onMount } from 'svelte';
+  import ApexCharts from 'apexcharts';
   import { filteredTransactions, categories } from "../store";
   import { getTotalAmountBy, formatCurrencyAmount } from "../helper";
+
+  let chart, chartContainer;
+
+  onMount(() => {
+    chart = new ApexCharts(chartContainer, {
+      series: [],
+      chart: {
+        width: 380,
+        type: 'pie',
+      },
+      labels: [],
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }]
+    });
+    chart.render();
+  })
 
   $: categoriesData = () => {
     const result = $categories.find(({ id }) => id === "expense");
@@ -38,14 +64,22 @@
           const [absoluteValue, relativeValue] = values;
           return {
             label,
-            values: [
-              formatCurrencyAmount(absoluteValue, 2),
-              `${relativeValue.toFixed(2)}%`
-            ]
+            value: absoluteValue,
           };
         })
     );
   };
+  $: {
+    if (chart) {
+      const data = categoriesData();
+      const series = data.map(({ value }) => value);
+      const labels = data.map(({ label }) => label);
+      chart.updateOptions({
+        series,
+        labels,
+      });
+    }
+  }
 </script>
 
 <style>
@@ -55,7 +89,5 @@
 </style>
 
 <div class="dashboard-container">
-  <DashboardContainer
-    title="Répartition des dépenses par catégorie"
-    list={categoriesData()} />
+  <div bind:this={chartContainer}/>
 </div>
