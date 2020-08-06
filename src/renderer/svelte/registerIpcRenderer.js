@@ -1,8 +1,15 @@
 import channels from 'common/channels';
-import { setTransactions, setAccounts } from './store';
-import { parseTransactions } from './helper';
+import {
+  setTransactions,
+  setAccounts
+} from './store';
+import {
+  parseTransactions
+} from './helper';
 
-const { ipcRenderer } = window.electron;
+const {
+  ipcRenderer
+} = window.electron;
 
 export default () => {
   ipcRenderer.on(channels.SET_TRANSACTIONS, (data) => {

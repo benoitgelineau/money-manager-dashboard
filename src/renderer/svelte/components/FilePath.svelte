@@ -1,5 +1,5 @@
 <script>
-  import channels from "common/channels";
+  import channels from 'common/channels';
 
   function openFolder() {
     const { ipcRenderer } = window.electron;

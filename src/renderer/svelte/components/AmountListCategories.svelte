@@ -1,8 +1,8 @@
 <script>
   import { onMount } from 'svelte';
   import ApexCharts from 'apexcharts';
-  import { filteredTransactions, categories } from "../store";
-  import { getTotalAmountBy, formatCurrencyAmount } from "../helper";
+  import { filteredTransactions, categories } from '../store';
+  import { getTotalAmountBy, formatCurrencyAmount } from '../helper';
 
   let chart, chartContainer;
 
@@ -14,23 +14,25 @@
         type: 'pie',
       },
       labels: [],
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: 'bottom',
+            },
           },
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }]
+        },
+      ],
     });
     chart.render();
-  })
+  });
 
   $: categoriesData = () => {
-    const result = $categories.find(({ id }) => id === "expense");
+    const result = $categories.find(({ id }) => id === 'expense');
     if (!result) {
       return [];
     }
@@ -39,26 +41,28 @@
         // Get amounts
         .map(category => {
           const absoluteAmount = getTotalAmountBy(
-            "category",
+            'category',
             category,
-            $filteredTransactions
+            $filteredTransactions,
           );
           const totalExpenses = getTotalAmountBy(
-            "type",
-            "expense",
-            $filteredTransactions
+            'type',
+            'expense',
+            $filteredTransactions,
           );
           const getRelativeAmount = () =>
             (parseFloat(absoluteAmount) / totalExpenses) * 100;
           return {
             label: category,
-            values: [absoluteAmount, getRelativeAmount()]
+            values: [absoluteAmount, getRelativeAmount()],
           };
         })
         // Remove null or negative values
         .filter(({ values }) => parseFloat(values[0]) > 0)
         // Sort from higher to lower value
-        .sort((a, b) => parseFloat(b.values[0]) - parseFloat(a.values[0]))
+        .sort(
+          (a, b) => parseFloat(b.values[0]) - parseFloat(a.values[0]),
+        )
         // Format values
         .map(({ label, values }) => {
           const [absoluteValue, relativeValue] = values;
@@ -89,5 +93,5 @@
 </style>
 
 <div class="dashboard-container">
-  <div bind:this={chartContainer}/>
+  <div bind:this={chartContainer} />
 </div>

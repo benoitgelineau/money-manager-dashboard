@@ -1,9 +1,21 @@
-import { format, isEqual, isAfter, isBefore } from 'date-fns';
-import { transactionTypes } from './config';
+import {
+  format,
+  isEqual,
+  isAfter,
+  isBefore
+} from 'date-fns';
+import {
+  transactionTypes
+} from './config';
 
 export const parseTransactions = (transactions) => {
-  return transactions.map(({ type, ...transaction }) => {
-    const getTypeLabel = transactionTypes.find(({ id }) => id === type).label;
+  return transactions.map(({
+    type,
+    ...transaction
+  }) => {
+    const getTypeLabel = transactionTypes.find(({
+      id
+    }) => id === type).label;
     return {
       ...transaction,
       type,
@@ -13,7 +25,11 @@ export const parseTransactions = (transactions) => {
 };
 
 export const formatTransactions = (transactions) => {
-  return transactions.map(({ date, amount, ...transaction }) => {
+  return transactions.map(({
+    date,
+    amount,
+    ...transaction
+  }) => {
     return {
       ...transaction,
       date: format(new Date(date), 'dd/MM/yyyy'),
@@ -22,8 +38,13 @@ export const formatTransactions = (transactions) => {
   });
 };
 
-export const filterTransactions = (transactions, { from, to }) => {
-  return transactions.filter(({ date }) => {
+export const filterTransactions = (transactions, {
+  from,
+  to
+}) => {
+  return transactions.filter(({
+    date
+  }) => {
     const currentDate = new Date(date);
     let isDateBefore = false;
     let isDateAfter = false;
@@ -46,9 +67,9 @@ export const removeDuplicates = (list) => {
 
 export const getTotalAmountBy = (field, filterValue, transactions) => {
   return transactions.reduce((amount, transaction) => {
-    return transaction[field] === filterValue
-      ? amount + parseFloat(transaction.amount)
-      : amount;
+    return transaction[field] === filterValue ?
+      amount + parseFloat(transaction.amount) :
+      amount;
   }, 0);
 };
 
@@ -75,7 +96,9 @@ export const formatInputAmount = (amount) => {
   let shouldAddTrailingComma = false;
 
   if (splittedParsedAmount.length > 1) {
-    const { length } = splittedParsedAmount[1];
+    const {
+      length
+    } = splittedParsedAmount[1];
     if (length > 2) {
       // Prevent adding more than 2 decimals
       parsedAmount = parsedAmount.slice(0, -1);

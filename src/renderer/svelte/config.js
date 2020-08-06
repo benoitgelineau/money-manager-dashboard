@@ -1,5 +1,4 @@
-export const fields = [
-  {
+export const fields = [{
     id: 'date',
     label: 'Date',
   },
@@ -29,14 +28,21 @@ export const fields = [
   },
 ];
 
-export const transactionTypes = [
-  { id: 'expense', label: 'Dépense' },
-  { id: 'income', label: 'Revenu' },
-  { id: 'transfer', label: 'Virement' },
+export const transactionTypes = [{
+    id: 'expense',
+    label: 'Dépense'
+  },
+  {
+    id: 'income',
+    label: 'Revenu'
+  },
+  {
+    id: 'transfer',
+    label: 'Virement'
+  },
 ];
 
-export const defaultCategories = [
-  {
+export const defaultCategories = [{
     id: 'expense',
     values: [],
   },

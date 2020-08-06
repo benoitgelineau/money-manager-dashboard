@@ -1,7 +1,18 @@
-import { writable, derived } from 'svelte/store';
-import { format } from 'date-fns';
-import { ACCOUNT_TYPE } from 'common/staticKeys';
-import { fields, transactionTypes, defaultCategories } from '../config';
+import {
+  writable,
+  derived
+} from 'svelte/store';
+import {
+  format
+} from 'date-fns';
+import {
+  ACCOUNT_TYPE
+} from 'common/staticKeys';
+import {
+  fields,
+  transactionTypes,
+  defaultCategories
+} from '../config';
 import {
   filterTransactions,
   formatTransactions,
@@ -19,9 +30,9 @@ const getInitialAmount = (account) => {
     'LINXEA Avenir - Assurance-vie - Epargne': 3000,
     'BforBank - PEA': 1305.19,
   };
-  return Object.keys(initialAmount).includes(account)
-    ? initialAmount[account]
-    : 0;
+  return Object.keys(initialAmount).includes(account) ?
+    initialAmount[account] :
+    0;
 };
 // Temp store main account (should be store with csv filepath in user settings)
 export const MAIN_ACCOUNT = 'Crédit Coopératif - CCP';
@@ -44,10 +55,10 @@ export const endDate = writable({});
 export const filteredTransactions = derived(
   [transactions, startDate, endDate],
   ([$transactions, $startDate, $endDate]) =>
-    filterTransactions($transactions, {
-      from: $startDate,
-      to: $endDate,
-    }),
+  filterTransactions($transactions, {
+    from: $startDate,
+    to: $endDate,
+  }),
 );
 
 // Format date and amount values
@@ -62,19 +73,25 @@ export const getOldestDate = derived(transactions, ($transactions) =>
 
 export const getLatestDate = derived(transactions, ($transactions) =>
   // $transactions.length > 0 ? new Date([...$transactions].pop().date) : null,
-  $transactions.length > 0
-    ? new Date($transactions[$transactions.length - 1].date)
-    : null,
+  $transactions.length > 0 ?
+  new Date($transactions[$transactions.length - 1].date) :
+  null,
 );
 
 export const categories = derived(transactions, ($transactions) => {
   const getCategoriesByType = (id) =>
     removeDuplicates(
       $transactions
-        .map(({ type, category }) => type === id && category)
-        .filter((item) => !!item),
+      .map(({
+        type,
+        category
+      }) => type === id && category)
+      .filter((item) => !!item),
     );
-  return defaultCategories.map(({ id, values }) => ({
+  return defaultCategories.map(({
+    id,
+    values
+  }) => ({
     id,
     values: removeDuplicates([...values, ...getCategoriesByType(id)]),
   }));
@@ -82,18 +99,23 @@ export const categories = derived(transactions, ($transactions) => {
 
 export const selectedAccounts = derived(accounts, ($accounts) =>
   $accounts
-    .filter((account) => !!account.selected)
-    .map(({ name, type }) => ({
-      name,
-      type,
-    })),
+  .filter((account) => !!account.selected)
+  .map(({
+    name,
+    type
+  }) => ({
+    name,
+    type,
+  })),
 );
 
 export const totalAccountAmounts = derived(
   [accounts, transactions],
   ([$accounts, $transactions]) => {
     return $accounts
-      .map(({ name }) => name)
+      .map(({
+        name
+      }) => name)
       .sort()
       .map((accountName) => {
         const totalAmount = $transactions.reduce((amount, transaction) => {
@@ -139,7 +161,11 @@ export const setTransactions = (data) => {
 };
 export const setAccounts = (transactions) => {
   const parsedAccounts = transactions.flatMap(
-    ({ type, source, beneficiary }) => {
+    ({
+      type,
+      source,
+      beneficiary
+    }) => {
       switch (type) {
         case 'transfer':
           return [source, beneficiary];
@@ -158,27 +184,33 @@ export const setAccounts = (transactions) => {
   }));
   accounts.set(result);
 };
-export const setAccountSelected = ({ name, selected }) => {
+export const setAccountSelected = ({
+  name,
+  selected
+}) => {
   accounts.update((storedAccounts) =>
     storedAccounts.map((account) =>
-      account.name === name
-        ? {
-            ...account,
-            selected,
-          }
-        : account,
+      account.name === name ?
+      {
+        ...account,
+        selected,
+      } :
+      account,
     ),
   );
 };
-export const setAccountType = ({ name, type }) => {
+export const setAccountType = ({
+  name,
+  type
+}) => {
   accounts.update((storedAccounts) =>
     storedAccounts.map((account) =>
-      account.name === name
-        ? {
-            ...account,
-            type,
-          }
-        : account,
+      account.name === name ?
+      {
+        ...account,
+        type,
+      } :
+      account,
     ),
   );
 };

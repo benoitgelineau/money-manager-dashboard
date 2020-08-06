@@ -1,14 +1,14 @@
 <script>
-  import { fields } from "../config";
-  import { formattedTransactions } from "../store";
+  import { fields } from '../config';
+  import { formattedTransactions } from '../store';
 
   const fieldsLabels = fields.map(field =>
-    field.id === "type"
+    field.id === 'type'
       ? {
           ...field,
-          id: "typeLabel"
+          id: 'typeLabel',
         }
-      : field
+      : field,
   );
 </script>
 
@@ -64,7 +64,7 @@
     color: #808080;
   }
 
-  td[data-id="amount"] {
+  td[data-id='amount'] {
     text-align: right;
   }
 

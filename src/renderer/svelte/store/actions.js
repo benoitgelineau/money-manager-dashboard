@@ -1,4 +1,6 @@
-import { startOfMonth } from 'date-fns';
+import {
+  startOfMonth
+} from 'date-fns';
 import channels from 'common/channels';
 import {
   setTransactions,
@@ -8,9 +10,13 @@ import {
   setEndDate,
   setIsLoading,
 } from './index';
-import { parseTransactions } from '../helper';
+import {
+  parseTransactions
+} from '../helper';
 
-const { ipcRenderer } = window.electron;
+const {
+  ipcRenderer
+} = window.electron;
 
 /**
  * TRANSACTIONS
@@ -35,7 +41,10 @@ export const addTransaction = (data) => {
   ipcRenderer.send(channels.ADD_TRANSACTION, data);
 };
 
-export const updateUserSettings = async ({ key, value }) => {
+export const updateUserSettings = async ({
+  key,
+  value
+}) => {
   const settings = await ipcRenderer.invoke(channels.SET_USER_SETTINGS, {
     key,
     value,

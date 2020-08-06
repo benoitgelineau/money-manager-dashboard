@@ -29,12 +29,12 @@
     font-weight: bold;
   }
 
-  .container[withRelativeValue="true"] li {
+  .container[withRelativeValue='true'] li {
     display: grid;
     grid-template-columns: 1fr auto 10px 50px;
   }
 
-  .container[withRelativeValue="true"] li .separator {
+  .container[withRelativeValue='true'] li .separator {
     text-align: center;
   }
 </style>

@@ -1,9 +1,16 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require('electron');
+const {
+  app,
+  BrowserWindow,
+  ipcMain
+} = require('electron');
 const path = require('path');
 const fs = require('fs');
 const channels = require('../common/channels');
-const { getRows, addRow } = require('./csvHelper');
+const {
+  getRows,
+  addRow
+} = require('./csvHelper');
 const UserSettings = require('./userSettings');
 
 const defaultBrowserWindowOptions = {
@@ -124,7 +131,10 @@ ipcMain.handle(channels.GET_USER_SETTINGS, () => {
   }
 });
 
-ipcMain.handle(channels.SET_USER_SETTINGS, (event, { key, value }) => {
+ipcMain.handle(channels.SET_USER_SETTINGS, (event, {
+  key,
+  value
+}) => {
   try {
     UserSettings.instance.set(key, value);
     return {

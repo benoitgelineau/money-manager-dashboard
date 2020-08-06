@@ -1,6 +1,10 @@
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
-const { contextBridge, ipcRenderer, ipcMain } = require('electron');
+const {
+  contextBridge,
+  ipcRenderer,
+  ipcMain
+} = require('electron');
 const channels = require('../common/channels');
 const channelsList = Object.values(channels);
 

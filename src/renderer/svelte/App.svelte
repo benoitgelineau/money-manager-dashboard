@@ -1,34 +1,34 @@
 <script>
-  import { onMount } from "svelte";
-  import { isAfter } from "date-fns";
-  import { isLoading, wealthAmount } from "./store";
+  import { onMount } from 'svelte';
+  import { isAfter } from 'date-fns';
+  import { isLoading, wealthAmount } from './store';
   import {
     fetchTransactions,
     openChildWindow,
-    loadSettings
-  } from "./store/actions";
-  import registerIpcRenderer from "./registerIpcRenderer";
-  import { formatCurrencyAmount } from "./helper";
-  import HomeView from "./views/Home.svelte";
-  import EvolutionsView from "./views/Evolutions.svelte";
-  import AccountSettings from "./views/AccountSettings.svelte";
-  import AmountListAccounts from "./components/AmountListAccounts.svelte";
+    loadSettings,
+  } from './store/actions';
+  import registerIpcRenderer from './registerIpcRenderer';
+  import { formatCurrencyAmount } from './helper';
+  import HomeView from './views/Home.svelte';
+  import EvolutionsView from './views/Evolutions.svelte';
+  import AccountSettings from './views/AccountSettings.svelte';
+  import AmountListAccounts from './components/AmountListAccounts.svelte';
 
   const pages = [
     {
-      id: "home",
-      label: "Dashboard"
+      id: 'home',
+      label: 'Dashboard',
     },
     {
-      id: "evolutions",
-      label: "Evolutions"
+      id: 'evolutions',
+      label: 'Evolutions',
     },
     {
-      id: "investments",
-      label: "Investissements"
-    }
+      id: 'investments',
+      label: 'Investissements',
+    },
   ];
-  let currentView = "home";
+  let currentView = 'home';
 
   function showView(id) {
     currentView = id;
@@ -103,7 +103,7 @@
     color: grey;
   }
 
-  nav li[data-active="true"] button {
+  nav li[data-active='true'] button {
     color: black;
   }
 
@@ -143,7 +143,9 @@
     <div id="app-version" />
     <!-- TODO - Toggle light/dark theme -->
   </div>
-  <button on:click={openAddTransactionWindow}>+ Ajouter une transaction</button>
+  <button on:click={openAddTransactionWindow}>
+    + Ajouter une transaction
+  </button>
 </header>
 
 <main>

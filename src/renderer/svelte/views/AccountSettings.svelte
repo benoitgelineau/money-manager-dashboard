@@ -1,29 +1,33 @@
 <script>
   import { ACCOUNT_TYPE } from 'common/staticKeys';
-  import { accounts, setAccountSelected, setAccountType } from "../store";
-  import { updateUserSettings } from "../store/actions";
+  import {
+    accounts,
+    setAccountSelected,
+    setAccountType,
+  } from '../store';
+  import { updateUserSettings } from '../store/actions';
 
   export const accountTypeList = [
     {
       id: ACCOUNT_TYPE.CURRENT,
-      label: "Courant"
+      label: 'Courant',
     },
     {
       id: ACCOUNT_TYPE.SAVINGS,
-      label: "Epargne"
+      label: 'Epargne',
     },
     {
       id: ACCOUNT_TYPE.INVESTMENT,
-      label: "Investissement"
-    }
+      label: 'Investissement',
+    },
   ];
 
   function handleCheckClick(event) {
     const { name, checked: selected } = event.target;
     setAccountSelected({ name, selected });
     updateUserSettings({
-      key: "accounts",
-      value: $accounts
+      key: 'accounts',
+      value: $accounts,
     });
   }
 
@@ -31,14 +35,16 @@
     const { name, value: type } = event.target;
     setAccountType({ name, type });
     updateUserSettings({
-      key: "accounts",
-      value: $accounts
+      key: 'accounts',
+      value: $accounts,
     });
   }
 
   $: sortedAccounts = [...$accounts]
     // Sort alphabetically
-    .sort((a, b) => (a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1))
+    .sort((a, b) =>
+      a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1,
+    )
     // Sort selected account before non-selected ones
     .sort((a, b) => {
       if (!a.selected) {

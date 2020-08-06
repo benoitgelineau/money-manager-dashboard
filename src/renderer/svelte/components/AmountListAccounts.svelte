@@ -1,9 +1,9 @@
 <script>
-  import { totalAccountAmounts, selectedAccounts } from "../store";
-  import { formatCurrencyAmount } from "../helper";
+  import { totalAccountAmounts, selectedAccounts } from '../store';
+  import { formatCurrencyAmount } from '../helper';
 
   $: displayedAccounts = $totalAccountAmounts.filter(({ label }) =>
-    $selectedAccounts.map(({ name }) => name).includes(label)
+    $selectedAccounts.map(({ name }) => name).includes(label),
   );
 </script>
 
@@ -41,7 +41,9 @@
   {#each displayedAccounts as { label, amount }}
     <li>
       <div class="label">{label}</div>
-      <div class="absolute-value">{formatCurrencyAmount(amount, 2)}</div>
+      <div class="absolute-value">
+        {formatCurrencyAmount(amount, 2)}
+      </div>
     </li>
   {/each}
 </ul>

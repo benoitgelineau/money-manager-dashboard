@@ -1,13 +1,16 @@
 const csvParser = require('csv-parser');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
-const { isAfter, isBefore, isEqual } = require('date-fns');
+const {
+  isAfter,
+  isBefore,
+  isEqual
+} = require('date-fns');
 const UserSettings = require('./userSettings');
 
 const CSV_FILEPATH = UserSettings.instance.csvFilePath();
 
-const csvHeader = [
-  {
+const csvHeader = [{
     id: 'date',
     title: 'date',
   },
@@ -47,13 +50,18 @@ function getAllRows() {
   });
 }
 
-exports.getRows = async ({ from = null, to = Date.now() } = {}) => {
+exports.getRows = async ({
+  from = null,
+  to = Date.now()
+} = {}) => {
   const rows = await getAllRows();
-  return rows.filter(({ date }) => {
+  return rows.filter(({
+    date
+  }) => {
     const currentDate = new Date(date);
-    return (isEqual(currentDate, to) || isBefore(currentDate, to)) && from
-      ? isEqual(currentDate, from) || isAfter(currentDate, from)
-      : true;
+    return (isEqual(currentDate, to) || isBefore(currentDate, to)) && from ?
+      isEqual(currentDate, from) || isAfter(currentDate, from) :
+      true;
   });
 };
 
