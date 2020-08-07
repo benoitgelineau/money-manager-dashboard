@@ -8,17 +8,19 @@
     endOfYear,
   } from 'date-fns';
   import frLocale from 'date-fns/locale/fr';
-  import { removeDuplicates } from '../helper';
+  import { removeDuplicates, formatCurrencyAmount } from '../helper';
   import {
     startDate,
     endDate,
     transactions,
     getOldestDate,
     getLatestDate,
+    wealthAmount,
   } from '../store';
-  import TransactionList from '../components/TransactionList.svelte';
-  import AmountListTypes from '../components/AmountListTypes.svelte';
+  import AmountListAccounts from '../components/AmountListAccounts.svelte';
   import AmountListCategories from '../components/AmountListCategories.svelte';
+  import AmountListTypes from '../components/AmountListTypes.svelte';
+  import TransactionList from '../components/TransactionList.svelte';
 
   let selectedPeriod = 'month';
 
@@ -72,40 +74,61 @@
 </script>
 
 <style>
-  #header {
-    display: flex;
-    flex-direction: column;
-    padding-right: 25px;
-  }
-
   #header #title {
     display: flex;
-    justify-content: space-between;
     align-items: center;
   }
 
-  .periods {
+  #main-info {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #account-list-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
+
+  #account-list-container #header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .periods-filter {
     display: flex;
     align-items: center;
+    background: goldenrod;
   }
 
-  .periods label {
+  .periods-filter label {
     display: inline-block;
   }
 
-  .periods > *:not(:last-child) {
+  .periods-filter > *:not(:last-child) {
     margin-right: 5px;
   }
 
-  .periods select {
+  .periods-filter select {
     cursor: pointer;
   }
 
-  section#details {
+  #main-info,
+  #period-details {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-template-rows: repeat(2, auto);
     grid-gap: 20px;
+  }
+
+  #main-info {
+    grid-template-columns: 2fr 1fr;
+    margin-bottom: 10px;
+  }
+
+  #period-details {
+    grid-template-columns: 1fr 2fr;
     margin-bottom: 30px;
   }
 
@@ -183,59 +206,84 @@
       0 0 2px rgba(0, 0, 0, 0.2);
     transition: left 0.15s ease-out;
   }
+
+  #select-period-container {
+    min-width: 150px;
+    text-align: right;
+  }
 </style>
 
 <div id="header">
   <div id="title">
     <h2>Vue d'ensemble</h2>
-    <div class="periods">
-      <div class="switch">
-        <input
-          type="radio"
-          class="switch-input"
-          name="view"
-          value="month"
-          id="month"
-          checked
-          on:change={handlePeriodRangeChange} />
-        <label for="month" class="switch-label switch-label-off">
-          Mois
-        </label>
-        <input
-          type="radio"
-          class="switch-input"
-          name="view"
-          value="year"
-          id="year"
-          on:change={handlePeriodRangeChange} />
-        <label for="year" class="switch-label switch-label-on">
-          Année
-        </label>
-        <span class="switch-selection" />
-      </div>
-      <label for="select-period">
-        <select
-          name="period-select"
-          id="select-period"
-          on:change={handlePeriodChange}>
-          {#if selectedPeriod === 'month'}
-            {#each allAvailableMonths as { label, value }}
-              <option {value}>{label}</option>
-            {/each}
-          {:else if selectedPeriod === 'year'}
-            {#each availableYears as value}
-              <option {value}>{value}</option>
-            {/each}
-          {/if}
-        </select>
-      </label>
-    </div>
   </div>
 </div>
 
-<section id="details">
-  <AmountListTypes />
-  <AmountListCategories />
+<section id="main-info">
+  <div id="account-list-container" class="dashboard-container">
+    <div id="header">
+      <p>
+        <u>Comptes</u>
+      </p>
+    </div>
+    <AmountListAccounts />
+  </div>
+  <div id="balance-amount" class="dashboard-container">
+    <p>
+      Patrimoine :
+      <span>{formatCurrencyAmount($wealthAmount, 2)}</span>
+      <!-- TODO - {arrow icon} with evolution from month-1 in % -->
+    </p>
+  </div>
+</section>
+
+<section id="period-info">
+  <div class="periods-filter">
+    <div class="switch">
+      <input
+        type="radio"
+        class="switch-input"
+        name="view"
+        value="month"
+        id="month"
+        checked
+        on:change={handlePeriodRangeChange} />
+      <label for="month" class="switch-label switch-label-off">
+        Mois
+      </label>
+      <input
+        type="radio"
+        class="switch-input"
+        name="view"
+        value="year"
+        id="year"
+        on:change={handlePeriodRangeChange} />
+      <label for="year" class="switch-label switch-label-on">
+        Année
+      </label>
+      <span class="switch-selection" />
+    </div>
+    <label id="select-period-container" for="select-period">
+      <select
+        name="period-select"
+        id="select-period"
+        on:change={handlePeriodChange}>
+        {#if selectedPeriod === 'month'}
+          {#each allAvailableMonths as { label, value }}
+            <option {value}>{label}</option>
+          {/each}
+        {:else if selectedPeriod === 'year'}
+          {#each availableYears as value}
+            <option {value}>{value}</option>
+          {/each}
+        {/if}
+      </select>
+    </label>
+  </div>
+  <div id="period-details">
+    <AmountListTypes />
+    <AmountListCategories />
+  </div>
 </section>
 
 <section id="transaction-list">
@@ -243,10 +291,10 @@
     <div class="header">
       <h4>Transactions</h4>
       <!-- TODO - Search bar, with field filter (:field) -->
-      <input
+      <!-- <input
         type="text"
         name="filterTransaction"
-        placeholder="Chercher une transaction..." />
+        placeholder="Chercher une transaction..." /> -->
     </div>
     <TransactionList />
   </div>

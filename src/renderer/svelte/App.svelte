@@ -1,18 +1,16 @@
 <script>
   import { onMount } from 'svelte';
   import { isAfter } from 'date-fns';
-  import { isLoading, wealthAmount } from './store';
+  import { isLoading } from './store';
   import {
     fetchTransactions,
     openChildWindow,
     loadSettings,
   } from './store/actions';
   import registerIpcRenderer from './registerIpcRenderer';
-  import { formatCurrencyAmount } from './helper';
   import HomeView from './views/Home.svelte';
   import EvolutionsView from './views/Evolutions.svelte';
   import AccountSettings from './views/AccountSettings.svelte';
-  import AmountListAccounts from './components/AmountListAccounts.svelte';
 
   const pages = [
     {
@@ -46,14 +44,6 @@
 </script>
 
 <style>
-  header {
-    position: relative;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
   #app-info h1 {
     font-size: 1.5rem;
     margin: 0;
@@ -66,7 +56,6 @@
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    padding: 25px 25px 5px;
   }
 
   #sidebar {
@@ -75,7 +64,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     overflow: hidden;
     margin-right: 20px;
   }
@@ -93,94 +82,61 @@
     margin-bottom: 0.5rem;
   }
 
-  nav button {
+  button {
     width: 100%;
     text-align: left;
     cursor: pointer;
   }
 
-  nav button.to-view {
+  button.to-view {
     color: grey;
   }
 
-  nav li[data-active='true'] button {
-    color: black;
-  }
-
-  #account-list-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    overflow: hidden;
-  }
-
-  #account-list-container #header {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-
-  #account-settings {
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    cursor: pointer;
+  [data-active='true'] button {
+    color: black !important;
   }
 
   #page-content {
     height: 100%;
     width: 100%;
+    padding-right: 5px;
     overflow-x: hidden;
     overflow-y: auto;
   }
 </style>
 
-<header>
-  <div id="app-info">
-    <h1>My Little Budget App</h1>
-    <div id="app-version" />
-    <!-- TODO - Toggle light/dark theme -->
-  </div>
-  <button on:click={openAddTransactionWindow}>
-    + Ajouter une transaction
-  </button>
-</header>
-
 <main>
   <div id="sidebar">
-    <nav>
-      <ul>
-        {#each pages as { id, label }}
-          <li data-active={id === currentView}>
-            <button class="to-view" on:click={() => showView(id)}>
-              {label}
-            </button>
-          </li>
-        {/each}
-      </ul>
-    </nav>
-    <hr style="width: 100%;" />
-    <div id="balance-amount">
-      <p>
-        Patrimoine :
-        <span>{formatCurrencyAmount($wealthAmount, 2)}</span>
-        <!-- TODO - {arrow icon} with evolution from month-1 in % -->
-      </p>
+    <div id="top">
+      <div id="app-info">
+        <h1>My Little Budget App</h1>
+      </div>
+      <nav>
+        <ul>
+          {#each pages as { id, label }}
+            <li data-active={id === currentView}>
+              <button class="to-view" on:click={() => showView(id)}>
+                {label}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      </nav>
+      <!-- <hr style="width: 100%;" />
+      <button on:click={openAddTransactionWindow}>
+        + Ajouter une transaction
+      </button> -->
     </div>
-    <div id="account-list-container">
-      <div id="header">
-        <p>
-          <u>Comptes</u>
-        </p>
+
+    <div id="bottom">
+      <div data-active={currentView === 'account-settings'}>
         <button
-          id="account-settings"
+          class="to-view"
           on:click={() => showView('account-settings')}>
-          Icon
+          Paramètres
         </button>
       </div>
-      <AmountListAccounts />
+      <div id="app-version" />
     </div>
   </div>
 
