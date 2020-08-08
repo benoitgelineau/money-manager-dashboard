@@ -50,34 +50,32 @@
     /* Works only if scroll is in table */
     /* position: sticky;
     top: 0; */
-    background: #6c7ae0;
     text-align: left;
-    font-weight: normal;
-    font-size: 0.9rem;
-    color: white;
+    font-weight: bold;
+    border-bottom: 1px solid white;
   }
 
   td {
     font-size: 0.8rem;
     padding-top: 6px;
     padding-bottom: 6px;
-    color: #808080;
   }
 
+  th[data-id='amount'],
   td[data-id='amount'] {
     text-align: right;
   }
 
   tr:nth-child(even) td {
-    background: #f8f6ff;
+    background: rgba(255, 255, 255, 0.1);
   }
 </style>
 
 <table class="transaction-list">
   <thead>
     <tr>
-      {#each fieldsLabels as { label }}
-        <th>{label}</th>
+      {#each fieldsLabels as { id, label }}
+        <th data-id={id}>{label}</th>
       {/each}
     </tr>
   </thead>

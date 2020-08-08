@@ -9,19 +9,17 @@
 
 <style>
   ul {
-    min-height: 0;
-    padding: 0;
+    padding: 0 15px;
     margin: 0;
     overflow-y: auto;
   }
 
   li {
     list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 5px;
-  }
-
-  li > * {
-    width: 100%;
   }
 
   .label {

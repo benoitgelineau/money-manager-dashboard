@@ -12,6 +12,7 @@
       chart: {
         width: 380,
         type: 'pie',
+        foreColor: 'white',
       },
       labels: [],
       responsive: [
@@ -93,5 +94,6 @@
 </style>
 
 <div class="dashboard-container">
+  <h3 class="header">Dépenses par catégorie</h3>
   <div bind:this={chartContainer} />
 </div>

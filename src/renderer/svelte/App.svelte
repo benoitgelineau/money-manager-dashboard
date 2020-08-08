@@ -44,29 +44,38 @@
 </script>
 
 <style>
+  #app-info {
+    margin-bottom: 50px;
+  }
   #app-info h1 {
-    font-size: 1.5rem;
-    margin: 0;
+    font-size: 1.25rem;
+  }
+  #app-version {
+    font-size: small;
+    color: var(--font-color-blur);
   }
 
   main {
     position: relative;
-    flex: 1 1 100%;
-    min-height: 0;
+    height: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
+    color: white;
   }
 
   #sidebar {
     flex: 0 0 200px;
     max-width: 200px;
-    height: 100%;
+    align-self: stretch;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    overflow: hidden;
+    padding: 15px 0 15px 15px;
     margin-right: 20px;
+    background: var(--bg-color-light);
+    border-radius: 6px;
+    overflow: hidden;
   }
 
   nav {
@@ -85,15 +94,21 @@
   button {
     width: 100%;
     text-align: left;
+    background: transparent;
     cursor: pointer;
   }
 
   button.to-view {
-    color: grey;
+    color: var(--font-color-blur);
   }
 
   [data-active='true'] button {
-    color: black !important;
+    color: white !important;
+    border-right: solid 3px var(--color-action);
+  }
+
+  #bottom {
+    margin-bottom: 25px;
   }
 
   #page-content {
@@ -109,7 +124,8 @@
   <div id="sidebar">
     <div id="top">
       <div id="app-info">
-        <h1>My Little Budget App</h1>
+        <h1>Money Manager</h1>
+        <div id="app-version" />
       </div>
       <nav>
         <ul>
@@ -136,7 +152,6 @@
           Paramètres
         </button>
       </div>
-      <div id="app-version" />
     </div>
   </div>
 

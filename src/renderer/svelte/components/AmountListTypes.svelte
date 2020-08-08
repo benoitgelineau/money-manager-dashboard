@@ -105,6 +105,7 @@
       chart: {
         type: 'bar',
         height: 350,
+        foreColor: 'white',
         toolbar: {
           show: false,
         },
@@ -170,5 +171,6 @@
 </style>
 
 <div class="dashboard-container">
+  <h3 class="header">Mouvements</h3>
   <div bind:this={chartContainer} />
 </div>

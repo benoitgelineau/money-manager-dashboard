@@ -7,18 +7,38 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
+  --bg-color-light: rgb(38, 39, 82);
+  --bg-color-dark: rgb(36, 34, 71);
+  --font-color-blur: rgb(95, 95, 148);
+  /* --color-action: rgb(255, 0, 77); */
+  --color-action: rgb(67, 15, 245);
+  background: var(--bg-color-dark);
 }
 
 body {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  color: #333;
   margin: 0;
-  padding: 15px 25px;
+  padding: 8px;
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 0.45em;
+  height: 0.45em;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  outline: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 a {
@@ -46,8 +66,6 @@ textarea {
   font-size: inherit;
   padding: 0.4em;
   box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 2px;
 }
 
 input:disabled {
@@ -59,28 +77,19 @@ input[type='range'] {
 }
 
 button {
-  color: #333;
-  background-color: #f4f4f4;
+  border: none;
   outline: none;
-}
-
-button:disabled {
-  color: #999;
-}
-
-button:not(:disabled):active {
-  background-color: #ddd;
-}
-
-button:focus {
-  border-color: #666;
 }
 
 /* Classes */
 .dashboard-container {
   display: grid;
   align-content: center;
-  background: lightgoldenrodyellow;
+  background: var(--bg-color-light);
   border-radius: 6px;
   padding: 25px;
+}
+
+.dashboard-container .header {
+  margin-bottom: 15px;
 }
