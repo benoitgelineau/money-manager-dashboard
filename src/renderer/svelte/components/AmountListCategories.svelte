@@ -8,26 +8,36 @@
 
   onMount(() => {
     chart = new ApexCharts(chartContainer, {
+      // Init series
       series: [],
       chart: {
-        width: 380,
+        height: 350,
         type: 'pie',
         foreColor: 'white',
       },
+      theme: {
+        palette: 'palette8',
+      },
+      // Init labels
       labels: [],
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-            },
-            legend: {
-              position: 'bottom',
-            },
+      plotOptions: {
+        pie: {
+          expandOnClick: false,
+        },
+      },
+      legend: {
+        position: 'right',
+        onItemClick: {
+          toggleDataSeries: false,
+        },
+      },
+      tooltip: {
+        y: {
+          formatter: function(val) {
+            return formatCurrencyAmount(val, 2);
           },
         },
-      ],
+      },
     });
     chart.render();
   });

@@ -101,6 +101,7 @@
   }
 
   onMount(() => {
+    const colors = ['#00E396', '#FF4560', '#f9ce1d', '#775DD0']; // Green, red, purple, gold
     chart = new ApexCharts(chartContainer, {
       chart: {
         type: 'bar',
@@ -110,9 +111,13 @@
           show: false,
         },
       },
+      colors,
+      fill: {
+        opacity: 1,
+      },
       series: seriesData,
       xaxis: {
-        categories: ['Montant'],
+        categories: [''],
         position: 'top',
         axisBorder: {
           show: false,
@@ -131,25 +136,43 @@
         labels: {
           show: false,
           formatter: function(val) {
-            return formatCurrencyAmount(val, 0);
+            return formatCurrencyAmount(val, 2);
           },
         },
       },
       plotOptions: {
         bar: {
+          columnWidth: '90%',
           dataLabels: {
-            position: 'top', // top, center, bottom
+            position: 'top',
           },
         },
       },
       dataLabels: {
         enabled: true,
         formatter: function(val) {
-          return formatCurrencyAmount(val, 0);
+          return formatCurrencyAmount(val, 2);
         },
         style: {
           fontSize: '11px',
-          // colors: ["#304758"]
+        },
+      },
+      legend: {
+        onItemClick: {
+          toggleDataSeries: false,
+        },
+        onItemHover: {
+          highlightDataSeries: false,
+        },
+      },
+      tooltip: {
+        enabled: false,
+      },
+      states: {
+        hover: {
+          filter: {
+            type: 'none',
+          },
         },
       },
     });
