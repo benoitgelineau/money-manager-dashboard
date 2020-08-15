@@ -84,7 +84,7 @@ button {
 /* Classes */
 .dashboard-container {
   display: grid;
-  align-content: center;
+  align-content: start;
   background: var(--bg-color-light);
   border-radius: 6px;
   padding: 25px;

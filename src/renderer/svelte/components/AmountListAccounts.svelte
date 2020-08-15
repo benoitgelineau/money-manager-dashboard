@@ -1,8 +1,21 @@
 <script>
-  import { totalAccountAmounts, selectedAccounts } from '../store';
+  import {
+    monthlyTotalAccountAmounts,
+    selectedAccounts,
+  } from '../store';
   import { formatCurrencyAmount } from '../helper';
 
-  $: displayedAccounts = $totalAccountAmounts.filter(({ label }) =>
+  $: amounts =
+    $monthlyTotalAccountAmounts.length > 0 &&
+    $monthlyTotalAccountAmounts[
+      $monthlyTotalAccountAmounts.length - 1
+    ].data.length > 0
+      ? $monthlyTotalAccountAmounts[
+          $monthlyTotalAccountAmounts.length - 1
+        ].data
+      : [];
+
+  $: displayedAccounts = amounts.filter(({ label }) =>
     $selectedAccounts.map(({ name }) => name).includes(label),
   );
 </script>

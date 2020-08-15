@@ -3,7 +3,8 @@ import {
   derived
 } from 'svelte/store';
 import {
-  format
+  isAfter,
+  eachMonthOfInterval,
 } from 'date-fns';
 import {
   ACCOUNT_TYPE
@@ -109,44 +110,63 @@ export const selectedAccounts = derived(accounts, ($accounts) =>
   })),
 );
 
-export const totalAccountAmounts = derived(
-  [accounts, transactions],
-  ([$accounts, $transactions]) => {
-    return $accounts
+export const monthlyTotalAccountAmounts = derived(
+  [accounts, transactions, getOldestDate, getLatestDate],
+  ([$accounts, $transactions, $getOldestDate, $getLatestDate]) => {
+    if (!$getOldestDate || !$getLatestDate) {
+      return [];
+    }
+
+    const sortedAccountNames = $accounts
       .map(({
         name
       }) => name)
-      .sort()
-      .map((accountName) => {
-        const totalAmount = $transactions.reduce((amount, transaction) => {
-          const shouldIncreaseAmount =
-            transaction.beneficiary === accountName &&
-            (transaction.type === 'income' || transaction.type === 'transfer');
-          const shouldDecreaseAmount =
-            transaction.source === accountName &&
-            (transaction.type === 'expense' || transaction.type === 'transfer');
-          if (shouldIncreaseAmount) {
-            return amount + parseFloat(transaction.amount);
-          } else if (shouldDecreaseAmount) {
-            return amount - parseFloat(transaction.amount);
-          }
-          return amount;
-        }, 0);
-        return {
-          label: accountName,
-          amount: totalAmount + getInitialAmount(accountName),
-        };
-      });
+      .sort();
+
+    return [...eachMonthOfInterval({
+      start: $getOldestDate,
+      end: $getLatestDate,
+    }), $getLatestDate].map(date => {
+      return {
+        date,
+        data: sortedAccountNames
+          .map((accountName) => {
+            const totalAmount = $transactions.reduce((amount, transaction) => {
+              if (isAfter(new Date(transaction.date), date)) {
+                return amount;
+              }
+              const shouldIncreaseAmount =
+                transaction.beneficiary === accountName &&
+                (transaction.type === 'income' || transaction.type === 'transfer');
+              const shouldDecreaseAmount =
+                transaction.source === accountName &&
+                (transaction.type === 'expense' || transaction.type === 'transfer');
+              if (shouldIncreaseAmount) {
+                return amount + parseFloat(transaction.amount);
+              } else if (shouldDecreaseAmount) {
+                return amount - parseFloat(transaction.amount);
+              }
+              return amount;
+            }, 0);
+            return {
+              label: accountName,
+              amount: totalAmount + getInitialAmount(accountName),
+            };
+          }),
+      }
+    })
   },
 );
 
 // Add all accounts amounts
-export const wealthAmount = derived(
-  totalAccountAmounts,
-  ($totalAccountAmounts) => {
-    return $totalAccountAmounts.reduce((totalAmount, account) => {
+export const monthlyWealthAmount = derived(
+  monthlyTotalAccountAmounts,
+  ($monthlyTotalAccountAmounts) => {
+    return $monthlyTotalAccountAmounts.map(({
+      data
+    }) => data.reduce((totalAmount, account) => {
       return totalAmount + parseFloat(account.amount);
-    }, 0);
+    }, 0)).map(amount => Math.round(amount))
   },
 );
 
@@ -190,8 +210,7 @@ export const setAccountSelected = ({
 }) => {
   accounts.update((storedAccounts) =>
     storedAccounts.map((account) =>
-      account.name === name ?
-      {
+      account.name === name ? {
         ...account,
         selected,
       } :
@@ -205,8 +224,7 @@ export const setAccountType = ({
 }) => {
   accounts.update((storedAccounts) =>
     storedAccounts.map((account) =>
-      account.name === name ?
-      {
+      account.name === name ? {
         ...account,
         type,
       } :

@@ -1,11 +1,10 @@
 <script>
-  import { formatCurrencyAmount } from '../helper';
-  import { wealthAmount } from '../store';
   import AmountListAccounts from '../components/AmountListAccounts.svelte';
   import AmountListCategories from '../components/AmountListCategories.svelte';
   import AmountListTypes from '../components/AmountListTypes.svelte';
   import TransactionList from '../components/TransactionList.svelte';
   import PeriodFilterBar from '../components/PeriodFilterBar.svelte';
+  import WealthContainer from '../components/WealthContainer.svelte';
 </script>
 
 <style>
@@ -30,7 +29,7 @@
   }
 
   #main-info {
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 60% 1fr;
     margin-bottom: 10px;
   }
 
@@ -57,13 +56,7 @@
     <h3 class="header">Comptes</h3>
     <AmountListAccounts />
   </div>
-  <div id="balance-amount" class="dashboard-container">
-    <h3 class="header">Patrimoine</h3>
-    <div>
-      {formatCurrencyAmount($wealthAmount, 2)}
-      <!-- TODO - {arrow icon} with evolution from month-1 in % -->
-    </div>
-  </div>
+  <WealthContainer />
 </section>
 
 <section id="period-info">

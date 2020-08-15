@@ -15,7 +15,6 @@
     transactions,
     getOldestDate,
     getLatestDate,
-    wealthAmount,
   } from '../store';
   import PeriodSwitchButton from './PeriodSwitchButton.svelte';
   import PeriodSelectButton from './PeriodSelectButton.svelte';
