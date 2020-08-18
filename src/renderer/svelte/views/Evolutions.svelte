@@ -1,11 +1,15 @@
 <script>
-  const analytics = [
+  import Select from '../components/common/Select.svelte';
+  import YearlyFlowsChart from '../components/charts/YearlyFlowsChart.svelte';
+  const chartsList = [
     {
+      // Line chart
       id: '',
-      label:
-        'Graphique des courbes des dépenses, revenus, épargne et investissement sur 1 an, avec tableau en dessous pour valeurs exactes',
+      label: 'Évolution des mouvements sur 1 an',
+      component: YearlyFlowsChart,
     },
     {
+      // Stacked bar chart
       id: '',
       label:
         'Graphique des dépenses par catégorie, avec tableau en dessous pour valeurs exactes (absolues et relatives)',
@@ -36,26 +40,17 @@
         "Graphique de l'évolution de mon patrimoine (total tous les comptes + cours actuels des investissements)",
     },
   ];
+  let currentSelection = chartsList[0];
+
+  function handleOptionClick(option) {
+    console.log('handleOptionClick option', option);
+    currentSelection = option;
+  }
 </script>
 
 <style>
-  ul {
-    list-style-type: none;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 20px;
-  }
 
-  li {
-    background: lightcoral;
-    border-radius: 5px;
-    padding: 10px;
-  }
 </style>
 
-<ul>
-  {#each analytics as { label }}
-    <li>{label}</li>
-  {/each}
-</ul>
+<Select options={chartsList} {handleOptionClick} />
+<svelte:component this={currentSelection.component} />

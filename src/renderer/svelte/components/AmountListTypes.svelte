@@ -5,6 +5,7 @@
   import { filteredTransactions, accounts } from '../store';
   import { getTotalAmountBy, formatCurrencyAmount } from '../helper';
 
+  // TODO Refacto with YearlyFlowsChart
   const types = [
     {
       id: 'income',
