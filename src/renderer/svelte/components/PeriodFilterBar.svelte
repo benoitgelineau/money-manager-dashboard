@@ -16,10 +16,11 @@
     getOldestDate,
     getLatestDate,
   } from '../store';
+  import Select from './common/Select.svelte';
   import PeriodSwitchButton from './PeriodSwitchButton.svelte';
-  import PeriodSelectButton from './PeriodSelectButton.svelte';
 
   let selectedPeriod = 'month';
+  let options = [];
 
   function handlePeriodRangeChange(event) {
     const { value } = event.target;
@@ -31,13 +32,13 @@
     }
   }
 
-  function udpatePeriod(date) {
+  function udpatePeriod({ value }) {
     if (selectedPeriod === 'month') {
-      $startDate = startOfMonth(new Date(date));
-      $endDate = endOfMonth(new Date(date));
+      $startDate = startOfMonth(new Date(value));
+      $endDate = endOfMonth(new Date(value));
     } else if (selectedPeriod === 'year') {
-      $startDate = startOfYear(new Date(date));
-      $endDate = endOfYear(new Date(date));
+      $startDate = startOfYear(new Date(value));
+      $endDate = endOfYear(new Date(value));
     }
   }
 
@@ -63,6 +64,17 @@
   $: availableYears = removeDuplicates(
     allAvailableMonths.map(({ value }) => value.getFullYear()),
   );
+  $: {
+    // Update options list
+    if (selectedPeriod === 'month') {
+      options = allAvailableMonths;
+    } else if (selectedPeriod === 'year') {
+      options = availableYears.map(value => ({
+        label: value,
+        value,
+      }));
+    }
+  }
 </script>
 
 <style>
@@ -84,10 +96,6 @@
     <PeriodSwitchButton {handlePeriodRangeChange} />
   </li>
   <li>
-    <PeriodSelectButton
-      handlePeriodChange={udpatePeriod}
-      {selectedPeriod}
-      {allAvailableMonths}
-      {availableYears} />
+    <Select {options} handleOptionClick={udpatePeriod} />
   </li>
 </ul>

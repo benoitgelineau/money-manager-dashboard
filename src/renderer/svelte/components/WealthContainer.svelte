@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte';
   import ApexCharts from 'apexcharts';
-  // import { format } from 'date-fns';
   import {
     monthlyTotalAccountAmounts,
     monthlyWealthAmount,
@@ -75,14 +74,20 @@
     $monthlyWealthAmount.length > 0
       ? $monthlyWealthAmount[$monthlyWealthAmount.length - 1]
       : 0;
-  $: lastMonthlyWealthProgress =
+  // $: lastMonthlyWealthProgress =
+  //   $monthlyWealthAmount.length > 1
+  //     ? $monthlyWealthAmount[$monthlyWealthAmount.length - 1] /
+  //         $monthlyWealthAmount[$monthlyWealthAmount.length - 2] -
+  //       1
+  //     : '';
+  $: yearlyWealthProgress =
     $monthlyWealthAmount.length > 1
       ? $monthlyWealthAmount[$monthlyWealthAmount.length - 1] /
-          $monthlyWealthAmount[$monthlyWealthAmount.length - 2] -
+          $monthlyWealthAmount[0] -
         1
       : '';
   $: {
-    if (chart && wealthAmount && lastMonthlyWealthProgress) {
+    if (chart && wealthAmount && yearlyWealthProgress) {
       chart.updateOptions({
         annotations: {
           texts: [
@@ -96,12 +101,12 @@
               fontWeight: 500,
             },
             {
-              text: formatWealthProgress(lastMonthlyWealthProgress),
+              text: formatWealthProgress(yearlyWealthProgress),
               textAnchor: 'start',
               x: '56%',
               y: '14%',
               foreColor:
-                lastMonthlyWealthProgress > 0 ? '#00E396' : '#FF4560',
+                yearlyWealthProgress > 0 ? '#00E396' : '#FF4560',
               fontSize: '12px',
             },
           ],

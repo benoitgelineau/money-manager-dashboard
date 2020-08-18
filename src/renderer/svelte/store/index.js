@@ -5,6 +5,8 @@ import {
 import {
   isAfter,
   eachMonthOfInterval,
+  differenceInYears,
+  subYears,
 } from 'date-fns';
 import {
   ACCOUNT_TYPE
@@ -79,6 +81,19 @@ export const getLatestDate = derived(transactions, ($transactions) =>
   null,
 );
 
+// Return max monthly period range with limit to 1 year
+export const getMaxMonthlyRange = derived([getOldestDate, getLatestDate], ([$getOldestDate, $getLatestDate]) => {
+  if (!$getOldestDate || !$getLatestDate) {
+    return [];
+  }
+  const isPeriodMoreThanOneYear = differenceInYears($getLatestDate, $getOldestDate) > 0;
+  const startDate = isPeriodMoreThanOneYear ? subYears($getLatestDate) : $getOldestDate;
+  return eachMonthOfInterval({
+    start: startDate,
+    end: $getLatestDate,
+  });
+});
+
 export const categories = derived(transactions, ($transactions) => {
   const getCategoriesByType = (id) =>
     removeDuplicates(
@@ -111,22 +126,15 @@ export const selectedAccounts = derived(accounts, ($accounts) =>
 );
 
 export const monthlyTotalAccountAmounts = derived(
-  [accounts, transactions, getOldestDate, getLatestDate],
-  ([$accounts, $transactions, $getOldestDate, $getLatestDate]) => {
-    if (!$getOldestDate || !$getLatestDate) {
-      return [];
-    }
-
+  [accounts, transactions, getMaxMonthlyRange, getLatestDate],
+  ([$accounts, $transactions, $getMaxMonthlyRange, $getLatestDate]) => {
     const sortedAccountNames = $accounts
       .map(({
         name
       }) => name)
       .sort();
 
-    return [...eachMonthOfInterval({
-      start: $getOldestDate,
-      end: $getLatestDate,
-    }), $getLatestDate].map(date => {
+    return [...$getMaxMonthlyRange, $getLatestDate].map(date => {
       return {
         date,
         data: sortedAccountNames

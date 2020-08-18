@@ -1,35 +1,23 @@
 <script>
-  export let handlePeriodChange,
-    selectedPeriod,
-    allAvailableMonths,
-    availableYears;
-  let optionsList = [];
+  export let options;
+  export let handleOptionClick;
   let currentSelection;
   let showOptions = false;
-
-  function setPeriodRange(value, label) {
-    currentSelection = label;
-    handlePeriodChange(value);
-    showOptions = false;
-  }
 
   function toggleShowOptions() {
     showOptions = !showOptions;
   }
 
+  function onOptionClick(event, option) {
+    currentSelection = option.label;
+    handleOptionClick(option);
+    showOptions = false;
+  }
+
   $: {
-    // Update options list
-    if (selectedPeriod === 'month') {
-      optionsList = allAvailableMonths;
-    } else if (selectedPeriod === 'year') {
-      optionsList = availableYears.map(value => ({
-        label: value,
-        value,
-      }));
-    }
-    // Reset current selection when selected period changes
-    if (optionsList.length > 0) {
-      currentSelection = optionsList[0].label;
+    // Reset currentSelecton when options has changed
+    if (options.length > 0) {
+      currentSelection = options[0].label;
     }
   }
 </script>
@@ -37,7 +25,7 @@
 <style>
   .select-box {
     position: relative;
-    width: 150px;
+    /* width: 150px; */
     display: flex;
   }
 
@@ -80,6 +68,7 @@
     background: var(--bg-color-dark);
     box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 10;
   }
   .select-box__list[data-show='true'] {
@@ -112,12 +101,12 @@
     </div>
   </div>
   <ul class="select-box__list" data-show={showOptions}>
-    {#each optionsList as { label, value }}
+    {#each options as option}
       <li
         class="select-box__option"
-        disabled={currentSelection === label}
-        on:click={() => setPeriodRange(value, label)}>
-        {label}
+        disabled={currentSelection === option.label}
+        on:click={event => onOptionClick(event, option)}>
+        {option.label}
       </li>
     {/each}
   </ul>
